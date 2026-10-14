@@ -34,3 +34,31 @@ struct Vault: Codable, Sendable {
     var version = 1
     var profiles: [Profile] = []
 }
+
+extension Vault {
+    /// Добавляет профили из резервной копии. Профиль с тем же названием дополняется,
+    /// аккаунты с уже известным секретным ключом пропускаются.
+    mutating func merge(_ imported: [Profile]) -> (added: Int, skipped: Int) {
+        var knownSecrets = Set(profiles.flatMap(\.accounts).map(\.secret))
+        var added = 0
+        var skipped = 0
+        for source in imported {
+            var fresh: [OTPAccount] = []
+            for var account in source.accounts {
+                guard knownSecrets.insert(account.secret).inserted else {
+                    skipped += 1
+                    continue
+                }
+                account.id = UUID()
+                fresh.append(account)
+            }
+            added += fresh.count
+            if let index = profiles.firstIndex(where: { $0.name == source.name }) {
+                profiles[index].accounts += fresh
+            } else if !fresh.isEmpty {
+                profiles.append(Profile(name: source.name, symbol: source.symbol, color: source.color, accounts: fresh))
+            }
+        }
+        return (added, skipped)
+    }
+}

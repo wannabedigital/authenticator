@@ -76,6 +76,14 @@ final class VaultStore {
         mutateProfile(profileID) { $0.accounts += accounts }
     }
 
+    /// Импорт из резервной копии. `nil` — сохранить не удалось (ошибка в `saveError`).
+    func importProfiles(_ imported: [Profile]) -> (added: Int, skipped: Int)? {
+        var result: (added: Int, skipped: Int)?
+        saveError = nil
+        mutate { result = $0.merge(imported) }
+        return saveError == nil ? result : nil
+    }
+
     func renameAccount(_ accountID: OTPAccount.ID, in profileID: Profile.ID, issuer: String, name: String) {
         mutateAccount(accountID, in: profileID) {
             $0.issuer = issuer
