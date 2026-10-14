@@ -33,11 +33,11 @@ struct ContentView: View {
                 .safeAreaBar(edge: .top) {
                     if accountSearch.isPresented {
                         SearchField(text: $accountSearch.query, prompt: "Поиск кодов", focusRequest: accountSearch.focusRequest) {
-                            withAnimation(.snappy) { accountSearch.dismiss() }
+                            withAnimation(SearchState.animation) { accountSearch.dismiss() }
                         }
                         .padding(.horizontal, WindowLayout.gridPadding)
                         .padding(.vertical, 8)
-                        .transition(.move(edge: .top).combined(with: .opacity))
+                        .transition(.opacity)
                     }
                 }
                 .navigationSplitViewColumnWidth(min: WindowLayout.detailMinWidth, ideal: 660)
@@ -51,11 +51,11 @@ struct ContentView: View {
             }
             .focusedSceneValue(\.addAccountAction, selection == nil ? nil : { isAddingAccount = true })
             .focusedSceneValue(\.findAccountAction, selection == nil ? nil : {
-                withAnimation(.snappy) { accountSearch.present() }
+                withAnimation(SearchState.animation) { accountSearch.present() }
             })
             .focusedSceneValue(\.findProfileAction) {
                 // Поле поиска живёт в боковой панели — если она скрыта, сначала показываем её.
-                withAnimation(.snappy) {
+                withAnimation(SearchState.animation) {
                     columnVisibility = .all
                     profileSearch.present()
                 }

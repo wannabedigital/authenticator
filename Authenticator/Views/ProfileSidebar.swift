@@ -37,11 +37,11 @@ struct ProfileSidebar: View {
         .safeAreaBar(edge: .top) {
             if search.isPresented {
                 SearchField(text: $search.query, prompt: "Поиск профилей", focusRequest: search.focusRequest) {
-                    withAnimation(.snappy) { search.dismiss() }
+                    withAnimation(SearchState.animation) { search.dismiss() }
                 }
                 .padding(.horizontal, 10)
                 .padding(.bottom, 6)
-                .transition(.move(edge: .top).combined(with: .opacity))
+                .transition(.opacity)
             }
         }
         .safeAreaInset(edge: .bottom) {

@@ -3,6 +3,9 @@ import SwiftUI
 
 /// Состояние строки поиска, которая появляется по сочетанию клавиш.
 struct SearchState {
+    /// Строка поиска проявляется и растворяется, а содержимое под ней плавно сдвигается.
+    static let animation = Animation.smooth(duration: 0.25)
+
     private(set) var isPresented = false
     var query = ""
     /// Каждое увеличение переводит фокус в поле — в том числе если оно уже открыто.
