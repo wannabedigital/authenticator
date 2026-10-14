@@ -94,6 +94,11 @@ final class AppLock {
         defaults.set(enabled, forKey: Keys.enabled)
     }
 
+    /// Подтверждение через Touch ID или пароль перед показом секретов — независимо от того, включена ли блокировка.
+    func confirmIdentity(reason: String) async -> Bool {
+        await authenticate(reason: reason)
+    }
+
     private func authenticate(reason: String) async -> Bool {
         isAuthenticating = true
         defer { isAuthenticating = false }
