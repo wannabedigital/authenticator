@@ -8,6 +8,7 @@ struct ContentView: View {
     @State private var accountSearch = SearchState()
     @State private var profileSearch = SearchState()
     @State private var isAddingAccount = false
+    @State private var isExporting = false
 
     var body: some View {
         if lock.isLocked || !store.isLoaded {
@@ -59,6 +60,10 @@ struct ContentView: View {
                     columnVisibility = .all
                     profileSearch.present()
                 }
+            }
+            .focusedSceneValue(\.exportAction, store.profiles.allSatisfy(\.accounts.isEmpty) ? nil : { isExporting = true })
+            .sheet(isPresented: $isExporting) {
+                ExportView()
             }
             .sheet(isPresented: $isAddingAccount) {
                 if let selection {

@@ -21,6 +21,11 @@ extension FocusedValues {
         get { self[FindProfileActionKey.self] }
         set { self[FindProfileActionKey.self] = newValue }
     }
+
+    var exportAction: (() -> Void)? {
+        get { self[ExportActionKey.self] }
+        set { self[ExportActionKey.self] = newValue }
+    }
 }
 
 private struct AddAccountActionKey: FocusedValueKey {
@@ -39,6 +44,10 @@ private struct FindProfileActionKey: FocusedValueKey {
     typealias Value = () -> Void
 }
 
+private struct ExportActionKey: FocusedValueKey {
+    typealias Value = () -> Void
+}
+
 /// Пункты меню «Файл» и «Правка» с горячими клавишами.
 struct AppCommands: Commands {
     let lock: AppLock
@@ -46,6 +55,7 @@ struct AppCommands: Commands {
     @FocusedValue(\.newProfileAction) private var newProfile
     @FocusedValue(\.findAccountAction) private var findAccount
     @FocusedValue(\.findProfileAction) private var findProfile
+    @FocusedValue(\.exportAction) private var export
 
     var body: some Commands {
         CommandGroup(replacing: .newItem) {
@@ -57,6 +67,10 @@ struct AppCommands: Commands {
                 .disabled(newProfile == nil)
         }
         CommandGroup(after: .newItem) {
+            Divider()
+            Button("Экспорт в Google Authenticator…") { export?() }
+                .keyboardShortcut("e", modifiers: [.command, .shift])
+                .disabled(export == nil)
             Divider()
             Button("Заблокировать") { lock.lock() }
                 .keyboardShortcut("l", modifiers: [.command, .control])
