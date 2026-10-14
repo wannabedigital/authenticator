@@ -19,6 +19,8 @@ struct AuthenticatorApp: App {
         }
         .defaultSize(width: 880, height: 580)
         .windowResizability(.contentMinSize)
+        // Только значки и без меню «Значок и текст / Только значок / Только текст» по правому клику.
+        .windowToolbarLabelStyle(fixed: .iconOnly)
         .commands { AppCommands(lock: lock) }
 
         Settings {
