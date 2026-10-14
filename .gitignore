@@ -1,5 +1,13 @@
+# macOS
 .DS_Store
+
+# Xcode: личные настройки и сборка
 xcuserdata/
+*.xcuserstate
 DerivedData/
 build/
-*.xcuserstate
+
+# Релизные артефакты
+*.xcarchive
+*.dSYM
+*.dSYM.zip
