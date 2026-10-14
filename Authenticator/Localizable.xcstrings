@@ -58,6 +58,9 @@
     "GitHub": {
       "shouldTranslate": false
     },
+    "Google Authenticator": {
+      "shouldTranslate": false
+    },
     "JBSW Y3DP EHPK 3PXP": {
       "shouldTranslate": false
     },
@@ -92,6 +95,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "QR-код на изображении не найден."
+          }
+        }
+      }
+    },
+    "QR-коды для Google Authenticator на iPhone. Недоступны аккаунты, чьи коды Google Authenticator показал бы неверно.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "QR codes for Google Authenticator on iPhone. Accounts whose codes Google Authenticator would show incorrectly are unavailable."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "QR-коды для Google Authenticator на iPhone. Недоступны аккаунты, чьи коды Google Authenticator показал бы неверно."
           }
         }
       }
@@ -133,6 +152,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Аккаунт"
+          }
+        }
+      }
+    },
+    "Аккаунтов в файле: %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accounts in the file: %lld"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Аккаунтов в файле: %lld"
+          }
+        }
+      }
+    },
+    "Аккаунтов: %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accounts: %lld"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Аккаунтов: %lld"
           }
         }
       }
@@ -265,6 +316,22 @@
         }
       }
     },
+    "Введите пароль, который задали при экспорте.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter the password you set when exporting."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Введите пароль, который задали при экспорте."
+          }
+        }
+      }
+    },
     "Вместе с ним будут удалены аккаунты (%lld). Это действие нельзя отменить.": {
       "localizations": {
         "en": {
@@ -293,22 +360,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Вставьте ссылку otpauth:// — поля ниже заполнятся сами."
-          }
-        }
-      }
-    },
-    "Выберите аккаунты. Недоступны те, чьи коды Google Authenticator показал бы неверно.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choose the accounts to transfer. Accounts whose codes Google Authenticator would show incorrectly are unavailable."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Выберите аккаунты. Недоступны те, чьи коды Google Authenticator показал бы неверно."
           }
         }
       }
@@ -393,6 +444,22 @@
         }
       }
     },
+    "Далее": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Далее"
+          }
+        }
+      }
+    },
     "Данные переноса повреждены": {
       "localizations": {
         "en": {
@@ -457,6 +524,22 @@
         }
       }
     },
+    "Добавлено аккаунтов: %lld. Уже были: %lld.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accounts added: %lld. Already present: %lld."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Добавлено аккаунтов: %lld. Уже были: %lld."
+          }
+        }
+      }
+    },
     "Если на сервисе включена двухфакторная защита, без этого кода войти не получится. Убедитесь, что у вас есть резервные коды.": {
       "localizations": {
         "en": {
@@ -501,6 +584,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Заблокировать"
+          }
+        }
+      }
+    },
+    "Зашифрованный паролем файл со всеми профилями и параметрами — для переноса в Authenticator на другом Mac или резервной копии.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A password-protected file with all profiles and settings — to move to Authenticator on another Mac or keep as a backup."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Зашифрованный паролем файл со всеми профилями и параметрами — для переноса в Authenticator на другом Mac или резервной копии."
           }
         }
       }
@@ -565,6 +664,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Изменить…"
+          }
+        }
+      }
+    },
+    "Импорт завершён": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import Complete"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Импорт завершён"
+          }
+        }
+      }
+    },
+    "Импортировать": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Импортировать"
           }
         }
       }
@@ -809,6 +940,22 @@
         }
       }
     },
+    "Назад": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Назад"
+          }
+        }
+      }
+    },
     "Название": {
       "localizations": {
         "en": {
@@ -921,6 +1068,22 @@
         }
       }
     },
+    "Не делайте скриншотов: в коде ваш секретный ключ.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Don’t take screenshots: this code contains your secret key."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не делайте скриншотов: в коде ваш секретный ключ."
+          }
+        }
+      }
+    },
     "Не добавлять": {
       "localizations": {
         "en": {
@@ -933,6 +1096,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Не добавлять"
+          }
+        }
+      }
+    },
+    "Не удалось открыть файл": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t Open the File"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось открыть файл"
           }
         }
       }
@@ -969,6 +1148,22 @@
         }
       }
     },
+    "Не удалось получить ключ из пароля": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t derive a key from the password"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось получить ключ из пароля"
+          }
+        }
+      }
+    },
     "Не удалось сохранить": {
       "localizations": {
         "en": {
@@ -981,6 +1176,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Не удалось сохранить"
+          }
+        }
+      }
+    },
+    "Не удалось сохранить файл": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t Save the File"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось сохранить файл"
+          }
+        }
+      }
+    },
+    "Неверный пароль или файл повреждён": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wrong password, or the file is damaged"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Неверный пароль или файл повреждён"
           }
         }
       }
@@ -1113,6 +1340,38 @@
         }
       }
     },
+    "Открыть резервную копию": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Backup"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открыть резервную копию"
+          }
+        }
+      }
+    },
+    "Открыть резервную копию…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Backup…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открыть резервную копию…"
+          }
+        }
+      }
+    },
     "Отмена": {
       "localizations": {
         "en": {
@@ -1141,6 +1400,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Отсканируйте в Google Authenticator"
+          }
+        }
+      }
+    },
+    "Отсканируйте в любом приложении-аутентификаторе. В коде сохранены все параметры аккаунта.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan it with any authenticator app. The code keeps all of the account’s settings."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отсканируйте в любом приложении-аутентификаторе. В коде сохранены все параметры аккаунта."
           }
         }
       }
@@ -1177,6 +1452,70 @@
         }
       }
     },
+    "Пароли не совпадают": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The passwords don’t match"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пароли не совпадают"
+          }
+        }
+      }
+    },
+    "Пароль": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Password"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пароль"
+          }
+        }
+      }
+    },
+    "Пароль для файла": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Password"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пароль для файла"
+          }
+        }
+      }
+    },
+    "Пароль должен быть не короче 8 символов": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The password must be at least 8 characters"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пароль должен быть не короче 8 символов"
+          }
+        }
+      }
+    },
     "Переместить в профиль": {
       "localizations": {
         "en": {
@@ -1189,22 +1528,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Переместить в профиль"
-          }
-        }
-      }
-    },
-    "Перенос в Google Authenticator": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Transfer to Google Authenticator"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Перенос в Google Authenticator"
           }
         }
       }
@@ -1289,6 +1612,22 @@
         }
       }
     },
+    "Повторите пароль": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repeat Password"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Повторите пароль"
+          }
+        }
+      }
+    },
     "Поддерживаются только типы totp и hotp": {
       "localizations": {
         "en": {
@@ -1369,6 +1708,22 @@
         }
       }
     },
+    "Показать QR-код…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show QR Code…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Показать QR-код…"
+          }
+        }
+      }
+    },
     "Получено QR-кодов: %lld из %lld. Добавьте остальные, чтобы перенести все аккаунты.": {
       "localizations": {
         "en": {
@@ -1445,6 +1800,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Профили"
+          }
+        }
+      }
+    },
+    "Профили с таким же названием будут дополнены, а уже добавленные аккаунты — пропущены.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profiles with the same name get the new accounts, and accounts you already have are skipped."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Профили с таким же названием будут дополнены, а уже добавленные аккаунты — пропущены."
           }
         }
       }
@@ -1721,6 +2092,38 @@
         }
       }
     },
+    "Сохранить файл…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save File…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сохранить файл…"
+          }
+        }
+      }
+    },
+    "Способ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Method"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Способ"
+          }
+        }
+      }
+    },
     "Сразу": {
       "localizations": {
         "en": {
@@ -1865,6 +2268,54 @@
         }
       }
     },
+    "Файл Authenticator": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Authenticator File"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Файл Authenticator"
+          }
+        }
+      }
+    },
+    "Файл будет зашифрован этим паролем. Без него файл не открыть, а восстановить пароль нельзя.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The file will be encrypted with this password. Without it the file can’t be opened, and the password can’t be recovered."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Файл будет зашифрован этим паролем. Без него файл не открыть, а восстановить пароль нельзя."
+          }
+        }
+      }
+    },
+    "Файл создан более новой версией Authenticator": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The file was created by a newer version of Authenticator"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Файл создан более новой версией Authenticator"
+          }
+        }
+      }
+    },
     "Файл хранилища найден, но ключ шифрования в связке ключей отсутствует. Файл не был изменён.": {
       "localizations": {
         "en": {
@@ -1993,18 +2444,50 @@
         }
       }
     },
-    "Экспорт в Google Authenticator…": {
+    "Что импортировать": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Export to Google Authenticator…"
+            "value": "Choose What to Import"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Экспорт в Google Authenticator…"
+            "value": "Что импортировать"
+          }
+        }
+      }
+    },
+    "Экспорт": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Экспорт"
+          }
+        }
+      }
+    },
+    "Экспорт…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Экспорт…"
           }
         }
       }
@@ -2073,6 +2556,38 @@
         }
       }
     },
+    "Это не файл резервной копии Authenticator": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This isn’t an Authenticator backup file"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Это не файл резервной копии Authenticator"
+          }
+        }
+      }
+    },
+    "Это резервная копия Authenticator. Откройте её через «Файл → Открыть резервную копию…».": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This is an Authenticator backup. Open it with File → Open Backup…."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Это резервная копия Authenticator. Откройте её через «Файл → Открыть резервную копию…»."
+          }
+        }
+      }
+    },
     "неизвестная ошибка": {
       "localizations": {
         "en": {
@@ -2121,6 +2636,22 @@
         }
       }
     },
+    "показать QR-код с секретным ключом": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "show a QR code with a secret key"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "показать QR-код с секретным ключом"
+          }
+        }
+      }
+    },
     "показать коды двухфакторной аутентификации": {
       "localizations": {
         "en": {
@@ -2149,6 +2680,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "показать секретные ключи для переноса"
+          }
+        }
+      }
+    },
+    "сохранить резервную копию с секретными ключами": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "save a backup with your secret keys"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "сохранить резервную копию с секретными ключами"
           }
         }
       }
