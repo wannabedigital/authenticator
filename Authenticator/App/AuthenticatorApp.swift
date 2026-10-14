@@ -11,5 +11,6 @@ struct AuthenticatorApp: App {
         }
         .defaultSize(width: 880, height: 580)
         .windowResizability(.contentMinSize)
+        .commands { AppCommands() }
     }
 }

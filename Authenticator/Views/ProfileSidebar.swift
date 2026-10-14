@@ -34,6 +34,7 @@ struct ProfileSidebar: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(12)
         }
+        .focusedSceneValue(\.newProfileAction) { isCreatingProfile = true }
         .sheet(isPresented: $isCreatingProfile) {
             ProfileEditorView(profile: nil, suggestedColor: nextColor) { selection = $0 }
         }

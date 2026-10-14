@@ -30,9 +30,9 @@ struct ContentView: View {
                 ToolbarItem(placement: .primaryAction) {
                     Button("Добавить аккаунт", systemImage: "plus") { isAddingAccount = true }
                         .disabled(selection == nil)
-                        .keyboardShortcut("n")
                 }
             }
+            .focusedSceneValue(\.addAccountAction, selection == nil ? nil : { isAddingAccount = true })
             .sheet(isPresented: $isAddingAccount) {
                 if let selection {
                     AddAccountView(profileID: selection)
