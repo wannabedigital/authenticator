@@ -23,6 +23,7 @@ private struct NewProfileActionKey: FocusedValueKey {
 
 /// Пункты меню «Файл» с горячими клавишами.
 struct AppCommands: Commands {
+    let lock: AppLock
     @FocusedValue(\.addAccountAction) private var addAccount
     @FocusedValue(\.newProfileAction) private var newProfile
 
@@ -34,6 +35,12 @@ struct AppCommands: Commands {
             Button("Новый профиль") { newProfile?() }
                 .keyboardShortcut("n", modifiers: [.command, .shift])
                 .disabled(newProfile == nil)
+        }
+        CommandGroup(after: .newItem) {
+            Divider()
+            Button("Заблокировать") { lock.lock() }
+                .keyboardShortcut("l", modifiers: [.command, .control])
+                .disabled(!lock.isEnabled || lock.isLocked)
         }
     }
 }
