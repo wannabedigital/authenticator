@@ -1,6 +1,6 @@
 # Authenticator
 
-A minimal authenticator for macOS 26: two-factor codes (TOTP and HOTP) in a native SwiftUI interface with Liquid Glass.
+A minimal authenticator for macOS 26 and later: two-factor codes (TOTP and HOTP) in a native SwiftUI interface with Liquid Glass.
 
 The app works entirely offline. It has no network access and no third-party dependencies, and your secret keys are stored only on your Mac, encrypted.
 
