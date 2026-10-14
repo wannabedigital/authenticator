@@ -93,7 +93,30 @@ struct QRDropZone: View {
     }
 
     private func importItems(_ items: [ImportItem]) {
-        Task { await onImport(items) }
+        Task {
+            var items = items
+            let blocked = items.compactMap { item -> URL? in
+                if case .unreadable(let url) = item { url } else { nil }
+            }
+            if !blocked.isEmpty, let granted = await requestAccess(to: blocked) {
+                items.removeAll { if case .unreadable = $0 { true } else { false } }
+                items += granted.map(ImportItem.read)
+            }
+            await onImport(items)
+        }
+    }
+
+    /// Песочница выдаёт доступ к файлу, только если пользователь сам выбрал его в системном окне.
+    /// Открываем окно сразу на нужном файле — остаётся нажать «Открыть».
+    private func requestAccess(to urls: [URL]) async -> [URL]? {
+        let panel = NSOpenPanel()
+        panel.message = "Подтвердите доступ к изображению из буфера обмена"
+        panel.prompt = "Открыть"
+        panel.directoryURL = urls[0]
+        panel.allowedContentTypes = [.image]
+        panel.allowsMultipleSelection = true
+        let response = await panel.begin()
+        return response == .OK ? panel.urls : nil
     }
 }
 

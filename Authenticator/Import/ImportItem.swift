@@ -5,8 +5,9 @@ import UniformTypeIdentifiers
 enum ImportItem {
     case image(Data)
     case text(String)
-    /// Файл есть, но прочитать его не удалось (например, нет доступа из песочницы).
-    case unreadable
+    /// Файл есть, но прочитать его не удалось: например, Telegram кладёт в буфер обмена
+    /// ссылку на файл в своём кэше, а песочница не даёт читать чужие папки.
+    case unreadable(URL)
 
     static let dropTypes: [UTType] = [.image, .fileURL, .plainText]
 
@@ -87,7 +88,7 @@ enum ImportItem {
     static func read(_ url: URL) -> ImportItem {
         let isScoped = url.startAccessingSecurityScopedResource()
         defer { if isScoped { url.stopAccessingSecurityScopedResource() } }
-        guard let data = try? Data(contentsOf: url) else { return .unreadable }
+        guard let data = try? Data(contentsOf: url) else { return .unreadable(url) }
         return .image(data)
     }
 }
