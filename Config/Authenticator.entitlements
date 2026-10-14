@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	Песочница macOS. Приложение получает только те права, что перечислены ниже.
+	Права на сеть (com.apple.security.network.client / .server) здесь намеренно НЕТ:
+	система не позволит приложению открыть ни одного сетевого соединения.
+	-->
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+</dict>
+</plist>
