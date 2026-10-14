@@ -11,6 +11,8 @@ The app works entirely offline. It has no network access and no third-party depe
 - QR code import: drag an image from Finder, Telegram or a browser, paste it with ⌘V, or choose a file.
 - Transfer from Google Authenticator: its export format (`otpauth-migration://`) is supported, including exports split across several QR codes.
 - Transfer to Google Authenticator: compatible accounts are shown as QR codes to scan on your iPhone.
+- Password-protected backup files with all profiles and settings, to move to another Mac or keep as a backup.
+- A QR code for a single account that any authenticator app can scan.
 - `otpauth://` links and manual key entry.
 - Lock with Touch ID or your Mac password: on launch, when the screen locks, on sleep and after a set time in the background.
 - Click a code to copy it; the clipboard is cleared after 30 seconds.
@@ -24,6 +26,7 @@ The app works entirely offline. It has no network access and no third-party depe
 | Network | The app runs in the macOS sandbox without the network entitlement, so the system won't let it send anything. |
 | Dependencies | Only Apple system frameworks: SwiftUI, CryptoKit, Security, LocalAuthentication, Vision. |
 | Storage | All data lives in one file encrypted with AES-256-GCM. The random 256-bit key is stored in the Keychain. |
+| Backups | Encrypted with AES-256-GCM using a key derived from your password with PBKDF2-HMAC-SHA256 (600,000 iterations, random salt). |
 | Memory | While the app is locked, the vault isn't decrypted. |
 | QR codes | Recognized on device with the Vision framework. |
 | Clipboard | Codes are marked as concealed for clipboard managers and erased after 30 seconds. |
@@ -34,12 +37,12 @@ You can check the entitlements of a built app:
 codesign -d --entitlements - Authenticator.app
 ```
 
-The output lists only `com.apple.security.app-sandbox` and `com.apple.security.files.user-selected.read-only`, which allows reading files you pick in the Open dialog. Debug builds also include `com.apple.security.get-task-allow` for the Xcode debugger. There is no network entitlement.
+The output lists only `com.apple.security.app-sandbox` and `com.apple.security.files.user-selected.read-write`, which allows access only to files you pick in the Open and Save dialogs. Debug builds also include `com.apple.security.get-task-allow` for the Xcode debugger. There is no network entitlement.
 
 Limitations worth knowing:
 
 - The Touch ID lock protects the interface. The vault key is kept in the login keychain and is available to the app while you're logged in.
-- The vault doesn't sync through iCloud, and there's no export yet. Keep the backup codes that services give you when you turn on two-factor authentication.
+- The vault doesn't sync through iCloud. Make a backup with File → Export, and keep the backup codes that services give you when you turn on two-factor authentication.
 
 ## Installation
 
@@ -72,9 +75,17 @@ If you choose Team: None, Xcode signs the app locally. It works, but macOS asks 
 4. In Authenticator, click + and drag the screenshots onto the import area.
 5. Delete the screenshots: they contain your secret keys.
 
+## Backups and moving to another Mac
+
+1. Choose File → Export, keep Authenticator File selected, and pick the accounts.
+2. Set a password of at least 8 characters, confirm with Touch ID and save the `.authbackup` file.
+3. On the other Mac, choose File → Open Backup, enter the password and pick the profiles to import.
+
+Profiles with the same name get the new accounts, and accounts you already have are skipped. A forgotten password can't be recovered.
+
 ## Moving to Google Authenticator
 
-1. In Authenticator, choose File → Export to Google Authenticator.
+1. In Authenticator, choose File → Export and select Google Authenticator.
 2. Select the accounts and confirm with Touch ID.
 3. In Google Authenticator on your iPhone, open the menu, choose to transfer accounts, then import, and scan each QR code.
 
@@ -88,7 +99,8 @@ Google Authenticator supports only SHA-1 codes with 6 digits and a 30-second per
 | ⇧⌘N | New profile |
 | ⌘F | Find code |
 | ⇧⌘F | Find profile |
-| ⇧⌘E | Export to Google Authenticator |
+| ⌘E | Export |
+| ⌘O | Open backup |
 | ⌃⌘L | Lock |
 | ⌘, | Settings |
 | ⌘V | Paste a QR code while hovering over the import area |
@@ -108,7 +120,7 @@ Config/         sandbox entitlements
 
 ## Roadmap
 
-- Encrypted backup
+- Scanning QR codes with the Mac or iPhone camera
 
 ## License
 
