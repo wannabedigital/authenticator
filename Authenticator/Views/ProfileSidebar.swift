@@ -3,6 +3,7 @@ import SwiftUI
 struct ProfileSidebar: View {
     @Environment(VaultStore.self) private var store
     @Binding var selection: Profile.ID?
+    @Binding var search: SearchState
 
     @State private var isCreatingProfile = false
     @State private var profileToEdit: Profile?
@@ -11,7 +12,7 @@ struct ProfileSidebar: View {
     var body: some View {
         List(selection: $selection) {
             Section("Профили") {
-                ForEach(store.profiles) { profile in
+                ForEach(filteredProfiles) { profile in
                     Label {
                         Text(profile.name)
                     } icon: {
@@ -25,9 +26,24 @@ struct ProfileSidebar: View {
                             .disabled(store.profiles.count < 2)
                     }
                 }
+                if filteredProfiles.isEmpty {
+                    Text("Ничего не найдено")
+                        .foregroundStyle(.secondary)
+                        .selectionDisabled()
+                }
             }
         }
         .navigationSplitViewColumnWidth(min: 190, ideal: 220, max: WindowLayout.sidebarMaxWidth)
+        .safeAreaBar(edge: .top) {
+            if search.isPresented {
+                SearchField(text: $search.query, prompt: "Поиск профилей", focusRequest: search.focusRequest) {
+                    withAnimation(.snappy) { search.dismiss() }
+                }
+                .padding(.horizontal, 10)
+                .padding(.bottom, 6)
+                .transition(.move(edge: .top).combined(with: .opacity))
+            }
+        }
         .safeAreaInset(edge: .bottom) {
             Button("Новый профиль", systemImage: "plus") { isCreatingProfile = true }
                 .buttonStyle(.glass)
@@ -55,6 +71,12 @@ struct ProfileSidebar: View {
                 Text("Вместе с ним будут удалены аккаунты (\(profile.accounts.count)). Это действие нельзя отменить.")
             }
         }
+    }
+
+    private var filteredProfiles: [Profile] {
+        let query = search.query.trimmed
+        guard !query.isEmpty else { return store.profiles }
+        return store.profiles.filter { $0.name.localizedStandardContains(query) }
     }
 
     /// Новому профилю предлагаем цвет, которого ещё нет, чтобы профили сразу различались.

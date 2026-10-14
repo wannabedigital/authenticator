@@ -16,6 +16,11 @@ extension FocusedValues {
         get { self[FindAccountActionKey.self] }
         set { self[FindAccountActionKey.self] = newValue }
     }
+
+    var findProfileAction: (() -> Void)? {
+        get { self[FindProfileActionKey.self] }
+        set { self[FindProfileActionKey.self] = newValue }
+    }
 }
 
 private struct AddAccountActionKey: FocusedValueKey {
@@ -30,12 +35,17 @@ private struct FindAccountActionKey: FocusedValueKey {
     typealias Value = () -> Void
 }
 
+private struct FindProfileActionKey: FocusedValueKey {
+    typealias Value = () -> Void
+}
+
 /// Пункты меню «Файл» и «Правка» с горячими клавишами.
 struct AppCommands: Commands {
     let lock: AppLock
     @FocusedValue(\.addAccountAction) private var addAccount
     @FocusedValue(\.newProfileAction) private var newProfile
     @FocusedValue(\.findAccountAction) private var findAccount
+    @FocusedValue(\.findProfileAction) private var findProfile
 
     var body: some Commands {
         CommandGroup(replacing: .newItem) {
@@ -58,6 +68,9 @@ struct AppCommands: Commands {
                 Button("Найти код…") { findAccount?() }
                     .keyboardShortcut("f")
                     .disabled(findAccount == nil)
+                Button("Найти профиль…") { findProfile?() }
+                    .keyboardShortcut("f", modifiers: [.command, .shift])
+                    .disabled(findProfile == nil)
             }
         }
     }

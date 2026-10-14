@@ -4,7 +4,9 @@ struct ContentView: View {
     @Environment(VaultStore.self) private var store
     @Environment(AppLock.self) private var lock
     @State private var selection: Profile.ID?
+    @State private var columnVisibility = NavigationSplitViewVisibility.automatic
     @State private var accountSearch = SearchState()
+    @State private var profileSearch = SearchState()
     @State private var isAddingAccount = false
 
     var body: some View {
@@ -18,8 +20,8 @@ struct ContentView: View {
             }
             .frame(minWidth: WindowLayout.minWidth, minHeight: WindowLayout.minHeight)
         } else {
-            NavigationSplitView {
-                ProfileSidebar(selection: $selection)
+            NavigationSplitView(columnVisibility: $columnVisibility) {
+                ProfileSidebar(selection: $selection, search: $profileSearch)
             } detail: {
                 Group {
                     if let selection, let profile = store.profile(withID: selection) {
@@ -53,6 +55,13 @@ struct ContentView: View {
             .focusedSceneValue(\.findAccountAction, selection == nil ? nil : {
                 withAnimation(.snappy) { accountSearch.present() }
             })
+            .focusedSceneValue(\.findProfileAction) {
+                // Поле поиска живёт в боковой панели — если она скрыта, сначала показываем её.
+                withAnimation(.snappy) {
+                    columnVisibility = .all
+                    profileSearch.present()
+                }
+            }
             .sheet(isPresented: $isAddingAccount) {
                 if let selection {
                     AddAccountView(profileID: selection)
