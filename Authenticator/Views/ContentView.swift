@@ -2,12 +2,15 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(VaultStore.self) private var store
+    @Environment(AppLock.self) private var lock
     @State private var selection: Profile.ID?
     @State private var searchText = ""
     @State private var isAddingAccount = false
 
     var body: some View {
-        if let loadError = store.loadError {
+        if lock.isLocked || !store.isLoaded {
+            LockView()
+        } else if let loadError = store.loadError {
             ContentUnavailableView {
                 Label("Не удалось открыть хранилище", systemImage: "lock.trianglebadge.exclamationmark")
             } description: {
