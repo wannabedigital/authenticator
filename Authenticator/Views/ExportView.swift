@@ -49,14 +49,17 @@ struct ExportView: View {
 
             Form {
                 ForEach(store.profiles.filter { !$0.accounts.isEmpty }) { profile in
+                    // Заголовок профиля — первая строка рамки: её верх закреплён,
+                    // и при сворачивании рамка сжимается только снизу.
                     Section {
+                        header(for: profile)
                         if !collapsedProfiles.contains(profile.id) {
                             ForEach(profile.accounts) { account in
                                 row(for: account)
+                                    .padding(.leading, 18)
+                                    .transition(.opacity)
                             }
                         }
-                    } header: {
-                        header(for: profile)
                     }
                 }
             }
@@ -86,7 +89,7 @@ struct ExportView: View {
         let isCollapsed = collapsedProfiles.contains(profile.id)
         return HStack(spacing: 8) {
             Button {
-                withAnimation(.snappy) {
+                withAnimation(.easeInOut(duration: 0.25)) {
                     if isCollapsed { collapsedProfiles.remove(profile.id) } else { collapsedProfiles.insert(profile.id) }
                 }
             } label: {
@@ -95,8 +98,9 @@ struct ExportView: View {
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.secondary)
                         .rotationEffect(.degrees(isCollapsed ? -90 : 0))
-                    ProfileIcon(profile: profile, size: 18)
+                    ProfileIcon(profile: profile, size: 20)
                     Text(profile.name)
+                        .font(.headline)
                 }
                 .contentShape(.rect)
             }
