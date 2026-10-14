@@ -3,10 +3,14 @@ import Observation
 
 /// Состояние приложения. Каждое изменение сразу шифруется и сохраняется на диск;
 /// если сохранить не удалось, изменение не применяется.
+///
+/// Расшифрованные данные находятся в памяти только между `load()` и `unload()`:
+/// пока приложение заблокировано, их там нет.
 @MainActor
 @Observable
 final class VaultStore {
     private(set) var vault = Vault()
+    private(set) var isLoaded = false
     /// Если хранилище не удалось прочитать, любые изменения блокируются,
     /// чтобы не перезаписать существующий файл пустым.
     private(set) var loadError: String?
@@ -16,11 +20,23 @@ final class VaultStore {
 
     init(storage: VaultStorage = .standard()) {
         self.storage = storage
+    }
+
+    func load() {
+        guard !isLoaded else { return }
         do {
             vault = try storage.load() ?? Vault(profiles: [Profile(name: "Личный")])
+            loadError = nil
         } catch {
+            vault = Vault()
             loadError = error.localizedDescription
         }
+        isLoaded = true
+    }
+
+    func unload() {
+        vault = Vault()
+        isLoaded = false
     }
 
     var profiles: [Profile] { vault.profiles }
@@ -104,7 +120,7 @@ final class VaultStore {
     }
 
     private func mutate(_ change: (inout Vault) -> Void) {
-        guard loadError == nil else { return }
+        guard isLoaded, loadError == nil else { return }
         var updated = vault
         change(&updated)
         do {
