@@ -8,6 +8,7 @@ struct ExportView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var selection: Set<OTPAccount.ID> = []
+    @State private var collapsedProfiles: Set<Profile.ID> = []
     /// `nil` — выбор аккаунтов, иначе — показ QR-кодов.
     @State private var codes: [(accounts: [OTPAccount], link: String)]?
     @State private var page = 0
@@ -49,15 +50,13 @@ struct ExportView: View {
             Form {
                 ForEach(store.profiles.filter { !$0.accounts.isEmpty }) { profile in
                     Section {
-                        ForEach(profile.accounts) { account in
-                            row(for: account)
+                        if !collapsedProfiles.contains(profile.id) {
+                            ForEach(profile.accounts) { account in
+                                row(for: account)
+                            }
                         }
                     } header: {
-                        Label {
-                            Text(profile.name)
-                        } icon: {
-                            ProfileIcon(profile: profile, size: 18)
-                        }
+                        header(for: profile)
                     }
                 }
             }
@@ -78,6 +77,46 @@ struct ExportView: View {
             }
             .controlSize(.large)
             .padding([.horizontal, .bottom], 20)
+        }
+    }
+
+    /// Шеврон сворачивает профиль, счётчик и галочка справа относятся ко всем его совместимым аккаунтам.
+    private func header(for profile: Profile) -> some View {
+        let ids = Set(profile.accounts.filter { GoogleMigration.incompatibility(of: $0) == nil }.map(\.id))
+        let isCollapsed = collapsedProfiles.contains(profile.id)
+        return HStack(spacing: 8) {
+            Button {
+                withAnimation(.snappy) {
+                    if isCollapsed { collapsedProfiles.remove(profile.id) } else { collapsedProfiles.insert(profile.id) }
+                }
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "chevron.down")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                        .rotationEffect(.degrees(isCollapsed ? -90 : 0))
+                    ProfileIcon(profile: profile, size: 18)
+                    Text(profile.name)
+                }
+                .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text(profile.name))
+            .accessibilityHint(isCollapsed ? Text("Развернуть") : Text("Свернуть"))
+
+            Spacer()
+
+            Text("\(ids.intersection(selection).count) из \(ids.count)")
+                .monospacedDigit()
+                .foregroundStyle(.secondary)
+            Toggle("Выбрать все в профиле", isOn: Binding(
+                get: { !ids.isEmpty && ids.isSubset(of: selection) },
+                set: { if $0 { selection.formUnion(ids) } else { selection.subtract(ids) } }
+            ))
+            .toggleStyle(.checkbox)
+            .labelsHidden()
+            .disabled(ids.isEmpty)
+            .help("Выбрать все в профиле")
         }
     }
 

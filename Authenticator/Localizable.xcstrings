@@ -4,6 +4,22 @@
     "%lld": {
       "shouldTranslate": false
     },
+    "%lld из %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of %lld"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld из %lld"
+          }
+        }
+      }
+    },
     "%lld секунд": {
       "localizations": {
         "en": {
@@ -325,6 +341,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Выбрать все"
+          }
+        }
+      }
+    },
+    "Выбрать все в профиле": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select all in profile"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выбрать все в профиле"
           }
         }
       }
@@ -1465,6 +1497,22 @@
         }
       }
     },
+    "Развернуть": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expand"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Развернуть"
+          }
+        }
+      }
+    },
     "Распознано: %@": {
       "localizations": {
         "en": {
@@ -1493,6 +1541,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Розовый"
+          }
+        }
+      }
+    },
+    "Свернуть": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collapse"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Свернуть"
           }
         }
       }
