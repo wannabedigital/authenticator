@@ -142,7 +142,7 @@ struct AddAccountView: View {
 
     private func importItems(_ items: [ImportItem]) async {
         guard !items.isEmpty else {
-            dropStatus = .failure("В буфере обмена нет изображения.")
+            dropStatus = .failure(String(localized: "В буфере обмена нет изображения."))
             return
         }
         dropStatus = .scanning
@@ -152,7 +152,7 @@ struct AddAccountView: View {
     private func apply(_ scan: ImportScan) {
         guard !scan.accounts.isEmpty else {
             dropStatus = scan.isMigration
-                ? .failure("В этом QR-коде нет поддерживаемых аккаунтов.")
+                ? .failure(String(localized: "В этом QR-коде нет поддерживаемых аккаунтов."))
                 : .failure(scan.failureMessage)
             return
         }
@@ -162,8 +162,8 @@ struct AddAccountView: View {
             let account = scan.accounts[0]
             fill(with: account)
             dropStatus = existingSecrets.contains(account.secret)
-                ? .failure("«\(account.title)» уже есть в этом профиле.")
-                : .success("Распознано: \(account.title)")
+                ? .failure(String(localized: "«\(account.title)» уже есть в этом профиле."))
+                : .success(String(localized: "Распознано: \(account.title)"))
             return
         }
 
@@ -183,9 +183,9 @@ struct AddAccountView: View {
         }
         let added = scan.accounts.count - skipped
         dropStatus = switch (added, skipped) {
-        case (0, _): .failure("Эти аккаунты уже добавлены.")
-        case (_, 0): .success("Найдено аккаунтов: \(added)")
-        default: .success("Найдено аккаунтов: \(added), уже были: \(skipped)")
+        case (0, _): .failure(String(localized: "Эти аккаунты уже добавлены."))
+        case (_, 0): .success(String(localized: "Найдено аккаунтов: \(added)"))
+        default: .success(String(localized: "Найдено аккаунтов: \(added), уже были: \(skipped)"))
         }
     }
 

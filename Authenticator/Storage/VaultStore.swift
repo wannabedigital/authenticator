@@ -25,7 +25,7 @@ final class VaultStore {
     func load() {
         guard !isLoaded else { return }
         do {
-            vault = try storage.load() ?? Vault(profiles: [Profile(name: "Личный")])
+            vault = try storage.load() ?? Vault(profiles: [Profile(name: String(localized: "Личный"))])
             loadError = nil
         } catch {
             vault = Vault()

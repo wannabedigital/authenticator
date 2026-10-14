@@ -72,7 +72,7 @@ final class AppLock {
 
     func unlock() async {
         guard isLocked, !isAuthenticating else { return }
-        guard await authenticate(reason: "показать коды двухфакторной аутентификации") else { return }
+        guard await authenticate(reason: String(localized: "показать коды двухфакторной аутентификации")) else { return }
         isLocked = false
         resignedAt = nil
         store.load()
@@ -88,7 +88,7 @@ final class AppLock {
     func setEnabled(_ enabled: Bool) async {
         guard enabled != isEnabled else { return }
         if !enabled {
-            guard await authenticate(reason: "отключить блокировку приложения") else { return }
+            guard await authenticate(reason: String(localized: "отключить блокировку приложения")) else { return }
         }
         isEnabled = enabled
         defaults.set(enabled, forKey: Keys.enabled)

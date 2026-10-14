@@ -24,8 +24,8 @@ enum GoogleMigration {
 
         var errorDescription: String? {
             switch self {
-            case .notMigrationLink: "Это не ссылка переноса Google Authenticator"
-            case .invalidPayload: "Данные переноса повреждены"
+            case .notMigrationLink: String(localized: "Это не ссылка переноса Google Authenticator")
+            case .invalidPayload: String(localized: "Данные переноса повреждены")
             }
         }
     }

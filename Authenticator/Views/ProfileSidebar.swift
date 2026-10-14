@@ -36,7 +36,7 @@ struct ProfileSidebar: View {
         .navigationSplitViewColumnWidth(min: 190, ideal: 220, max: WindowLayout.sidebarMaxWidth)
         .safeAreaBar(edge: .top) {
             if search.isPresented {
-                SearchField(text: $search.query, prompt: "Поиск профилей", focusRequest: search.focusRequest) {
+                SearchField(text: $search.query, prompt: String(localized: "Поиск профилей"), focusRequest: search.focusRequest) {
                     withAnimation(SearchState.animation) { search.dismiss() }
                 }
                 .padding(.horizontal, 10)

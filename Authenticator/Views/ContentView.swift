@@ -32,7 +32,7 @@ struct ContentView: View {
                 }
                 .safeAreaBar(edge: .top) {
                     if accountSearch.isPresented {
-                        SearchField(text: $accountSearch.query, prompt: "Поиск кодов", focusRequest: accountSearch.focusRequest) {
+                        SearchField(text: $accountSearch.query, prompt: String(localized: "Поиск кодов"), focusRequest: accountSearch.focusRequest) {
                             withAnimation(SearchState.animation) { accountSearch.dismiss() }
                         }
                         .padding(.horizontal, WindowLayout.gridPadding)

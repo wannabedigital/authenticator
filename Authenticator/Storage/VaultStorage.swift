@@ -11,7 +11,7 @@ struct VaultStorage: Sendable {
     enum Failure: LocalizedError {
         case missingKey
         var errorDescription: String? {
-            "Файл хранилища найден, но ключ шифрования в связке ключей отсутствует. Файл не был изменён."
+            String(localized: "Файл хранилища найден, но ключ шифрования в связке ключей отсутствует. Файл не был изменён.")
         }
     }
 

@@ -110,8 +110,8 @@ struct QRDropZone: View {
     /// Открываем окно сразу на нужном файле — остаётся нажать «Открыть».
     private func requestAccess(to urls: [URL]) async -> [URL]? {
         let panel = NSOpenPanel()
-        panel.message = "Подтвердите доступ к изображению из буфера обмена"
-        panel.prompt = "Открыть"
+        panel.message = String(localized: "Подтвердите доступ к изображению из буфера обмена")
+        panel.prompt = String(localized: "Открыть")
         panel.directoryURL = urls[0]
         panel.allowedContentTypes = [.image]
         panel.allowsMultipleSelection = true

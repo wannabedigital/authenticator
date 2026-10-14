@@ -41,11 +41,11 @@ struct ImportScan {
     /// Понятное объяснение, если ни одного аккаунта не нашлось.
     var failureMessage: String {
         if unreadableFiles > 0 && foundQRCodes == 0 {
-            return "Не удалось открыть файл. Попробуйте перетащить его или выбрать через обзор."
+            return String(localized: "Не удалось открыть файл. Попробуйте перетащить его или выбрать через обзор.")
         }
         if foundQRCodes == 0 && unrecognized == 0 {
-            return "QR-код на изображении не найден."
+            return String(localized: "QR-код на изображении не найден.")
         }
-        return "Это не QR-код аутентификатора."
+        return String(localized: "Это не QR-код аутентификатора.")
     }
 }

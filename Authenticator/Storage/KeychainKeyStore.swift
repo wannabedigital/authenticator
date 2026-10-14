@@ -11,8 +11,8 @@ struct KeychainKeyStore: Sendable {
     struct Failure: LocalizedError {
         let status: OSStatus
         var errorDescription: String? {
-            let message = SecCopyErrorMessageString(status, nil) as String? ?? "неизвестная ошибка"
-            return "Ошибка связки ключей (\(status)): \(message)"
+            let message = SecCopyErrorMessageString(status, nil) as String? ?? String(localized: "неизвестная ошибка")
+            return String(localized: "Ошибка связки ключей (\(status)): \(message)")
         }
     }
 

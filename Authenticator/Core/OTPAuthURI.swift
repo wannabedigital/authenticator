@@ -12,11 +12,11 @@ enum OTPAuthURI {
 
         var errorDescription: String? {
             switch self {
-            case .notOTPAuth: "Это не ссылка otpauth://"
-            case .unsupportedType: "Поддерживаются только типы totp и hotp"
-            case .missingSecret: "В ссылке нет секретного ключа"
-            case .invalidSecret: "Секретный ключ повреждён"
-            case .invalidParameter(let name): "Недопустимое значение параметра «\(name)»"
+            case .notOTPAuth: String(localized: "Это не ссылка otpauth://")
+            case .unsupportedType: String(localized: "Поддерживаются только типы totp и hotp")
+            case .missingSecret: String(localized: "В ссылке нет секретного ключа")
+            case .invalidSecret: String(localized: "Секретный ключ повреждён")
+            case .invalidParameter(let name): String(localized: "Недопустимое значение параметра «\(name)»")
             }
         }
     }
