@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AccountGrid: View {
     @Environment(VaultStore.self) private var store
+    @Environment(AppLock.self) private var lock
     let profile: Profile
     let searchText: String
 
@@ -9,6 +10,7 @@ struct AccountGrid: View {
     @State private var copyCount = 0
     @State private var accountToEdit: OTPAccount?
     @State private var accountToDelete: OTPAccount?
+    @State private var accountForQRCode: OTPAccount?
 
     private var accounts: [OTPAccount] {
         let query = searchText.trimmed
@@ -63,6 +65,9 @@ struct AccountGrid: View {
             do { try await Task.sleep(for: .seconds(1.6)) } catch { return }
             copiedID = nil
         }
+        .sheet(item: $accountForQRCode) { account in
+            AccountQRView(account: account)
+        }
         .sheet(item: $accountToEdit) { account in
             EditAccountView(account: account, profileID: profile.id)
         }
@@ -82,6 +87,7 @@ struct AccountGrid: View {
     private func menu(for account: OTPAccount) -> some View {
         Button("Скопировать код", systemImage: "doc.on.doc") { copy(account) }
         Button("Изменить…", systemImage: "pencil") { accountToEdit = account }
+        Button("Показать QR-код…", systemImage: "qrcode") { showQRCode(for: account) }
         let otherProfiles = store.profiles.filter { $0.id != profile.id }
         if !otherProfiles.isEmpty {
             Menu("Переместить в профиль", systemImage: "arrow.right.circle") {
@@ -92,6 +98,13 @@ struct AccountGrid: View {
         }
         Divider()
         Button("Удалить…", systemImage: "trash", role: .destructive) { accountToDelete = account }
+    }
+
+    private func showQRCode(for account: OTPAccount) {
+        Task {
+            guard await lock.confirmIdentity(reason: String(localized: "показать QR-код с секретным ключом")) else { return }
+            accountForQRCode = account
+        }
     }
 
     private func copy(_ account: OTPAccount) {
