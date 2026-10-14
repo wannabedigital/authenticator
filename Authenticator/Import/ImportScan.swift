@@ -7,6 +7,7 @@ struct ImportScan {
     var foundQRCodes = 0
     var unrecognized = 0
     var unreadableFiles = 0
+    var backupFiles = 0
 
     var isMigration: Bool { !batches.isEmpty }
 
@@ -14,6 +15,8 @@ struct ImportScan {
         var result = ImportScan()
         for item in items {
             switch item {
+            case .image(let data) where BackupFile.isBackup(data):
+                result.backupFiles += 1
             case .image(let data):
                 let payloads = (try? await QRCodeScanner.payloads(in: data)) ?? []
                 result.foundQRCodes += payloads.count
@@ -40,6 +43,9 @@ struct ImportScan {
 
     /// Понятное объяснение, если ни одного аккаунта не нашлось.
     var failureMessage: String {
+        if backupFiles > 0 {
+            return String(localized: "Это резервная копия Authenticator. Откройте её через «Файл → Открыть резервную копию…».")
+        }
         if unreadableFiles > 0 && foundQRCodes == 0 {
             return String(localized: "Не удалось открыть файл. Попробуйте перетащить его или выбрать через обзор.")
         }
