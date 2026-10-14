@@ -49,7 +49,11 @@ final class VaultStore {
     // MARK: Аккаунты
 
     func addAccount(_ account: OTPAccount, to profileID: Profile.ID) {
-        mutateProfile(profileID) { $0.accounts.append(account) }
+        addAccounts([account], to: profileID)
+    }
+
+    func addAccounts(_ accounts: [OTPAccount], to profileID: Profile.ID) {
+        mutateProfile(profileID) { $0.accounts += accounts }
     }
 
     func renameAccount(_ accountID: OTPAccount.ID, in profileID: Profile.ID, issuer: String, name: String) {
