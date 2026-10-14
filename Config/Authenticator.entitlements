@@ -9,5 +9,8 @@
 	-->
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
+	<!-- Чтение файлов, которые пользователь сам выбрал в окне обзора (картинки с QR-кодами). -->
+	<key>com.apple.security.files.user-selected.read-only</key>
+	<true/>
 </dict>
 </plist>
