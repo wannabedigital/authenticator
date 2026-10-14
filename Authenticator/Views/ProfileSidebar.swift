@@ -27,7 +27,7 @@ struct ProfileSidebar: View {
                 }
             }
         }
-        .navigationSplitViewColumnWidth(min: 190, ideal: 220)
+        .navigationSplitViewColumnWidth(min: 190, ideal: 220, max: WindowLayout.sidebarMaxWidth)
         .safeAreaInset(edge: .bottom) {
             Button("Новый профиль", systemImage: "plus") { isCreatingProfile = true }
                 .buttonStyle(.glass)
