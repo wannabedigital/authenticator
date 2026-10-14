@@ -1,48 +1,86 @@
-import AppKit
 import SwiftUI
 
-/// Перенос аккаунтов в Google Authenticator через QR-коды формата `otpauth-migration://`.
+/// Экспорт выбранных аккаунтов: зашифрованным файлом для Authenticator
+/// или QR-кодами формата `otpauth-migration://` для Google Authenticator.
 struct ExportView: View {
+    enum Method: Hashable {
+        case file
+        case googleAuthenticator
+    }
+
+    private enum Step {
+        case selection
+        case password
+        case codes([(accounts: [OTPAccount], link: String)])
+    }
+
     @Environment(VaultStore.self) private var store
     @Environment(AppLock.self) private var lock
     @Environment(\.dismiss) private var dismiss
 
+    @State private var method = Method.file
+    @State private var step = Step.selection
     @State private var selection: Set<OTPAccount.ID> = []
     @State private var collapsedProfiles: Set<Profile.ID> = []
-    /// `nil` — выбор аккаунтов, иначе — показ QR-кодов.
-    @State private var codes: [(accounts: [OTPAccount], link: String)]?
     @State private var page = 0
-    @State private var isAppActive = NSApp.isActive
 
-    private var compatibleIDs: Set<OTPAccount.ID> {
-        Set(store.profiles.flatMap(\.accounts).filter { GoogleMigration.incompatibility(of: $0) == nil }.map(\.id))
+    @State private var password = ""
+    @State private var confirmation = ""
+    @State private var isSealing = false
+    @State private var document: BackupDocument?
+    @State private var isSaving = false
+    @State private var errorMessage: String?
+
+    private func isSelectable(_ account: OTPAccount) -> Bool {
+        method == .file || GoogleMigration.incompatibility(of: account) == nil
+    }
+
+    private var selectableIDs: Set<OTPAccount.ID> {
+        Set(store.profiles.flatMap(\.accounts).filter(isSelectable).map(\.id))
     }
 
     var body: some View {
         Group {
-            if let codes {
-                codeStep(codes)
-            } else {
-                selectionStep
+            switch step {
+            case .selection: selectionStep
+            case .password: passwordStep
+            case .codes(let codes): codeStep(codes)
             }
         }
         .frame(width: 480)
         .frame(minHeight: 560)
-        .onAppear { selection = compatibleIDs }
-        // Секреты не держим на экране, пока вы в другом приложении.
-        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didResignActiveNotification)) { _ in isAppActive = false }
-        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in isAppActive = true }
+        .onAppear { selection = selectableIDs }
+        .onChange(of: method) { selection.formIntersection(selectableIDs) }
+        .alert("Не удалось сохранить файл", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+            Button("OK") {}
+        } message: {
+            Text(errorMessage ?? "")
+        }
     }
 
     // MARK: Выбор аккаунтов
 
     private var selectionStep: some View {
         VStack(spacing: 0) {
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Перенос в Google Authenticator")
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Экспорт")
                     .font(.title3.weight(.semibold))
-                Text("Выберите аккаунты. Недоступны те, чьи коды Google Authenticator показал бы неверно.")
-                    .foregroundStyle(.secondary)
+                Picker("Способ", selection: $method) {
+                    Text("Файл Authenticator").tag(Method.file)
+                    Text("Google Authenticator").tag(Method.googleAuthenticator)
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                Group {
+                    switch method {
+                    case .file:
+                        Text("Зашифрованный паролем файл со всеми профилями и параметрами — для переноса в Authenticator на другом Mac или резервной копии.")
+                    case .googleAuthenticator:
+                        Text("QR-коды для Google Authenticator на iPhone. Недоступны аккаунты, чьи коды Google Authenticator показал бы неверно.")
+                    }
+                }
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding([.horizontal, .top], 20)
@@ -67,25 +105,30 @@ struct ExportView: View {
 
             HStack {
                 Button(selection.isEmpty ? "Выбрать все" : "Снять выбор") {
-                    selection = selection.isEmpty ? compatibleIDs : []
+                    selection = selection.isEmpty ? selectableIDs : []
                 }
-                .disabled(compatibleIDs.isEmpty)
+                .disabled(selectableIDs.isEmpty)
                 Spacer()
                 Button("Отмена", role: .cancel) { dismiss() }
                     .keyboardShortcut(.cancelAction)
-                Button("Показать QR-коды", action: showCodes)
-                    .keyboardShortcut(.defaultAction)
-                    .buttonStyle(.glassProminent)
-                    .disabled(selection.isEmpty)
+                Group {
+                    switch method {
+                    case .file: Button("Далее") { step = .password }
+                    case .googleAuthenticator: Button("Показать QR-коды", action: showCodes)
+                    }
+                }
+                .keyboardShortcut(.defaultAction)
+                .buttonStyle(.glassProminent)
+                .disabled(selection.isEmpty)
             }
             .controlSize(.large)
             .padding([.horizontal, .bottom], 20)
         }
     }
 
-    /// Шеврон сворачивает профиль, счётчик и галочка справа относятся ко всем его совместимым аккаунтам.
+    /// Шеврон сворачивает профиль, счётчик и галочка справа относятся ко всем доступным аккаунтам профиля.
     private func header(for profile: Profile) -> some View {
-        let ids = Set(profile.accounts.filter { GoogleMigration.incompatibility(of: $0) == nil }.map(\.id))
+        let ids = Set(profile.accounts.filter(isSelectable).map(\.id))
         let isCollapsed = collapsedProfiles.contains(profile.id)
         return HStack(spacing: 8) {
             Button {
@@ -125,7 +168,7 @@ struct ExportView: View {
     }
 
     private func row(for account: OTPAccount) -> some View {
-        let issue = GoogleMigration.incompatibility(of: account)
+        let issue = method == .googleAuthenticator ? GoogleMigration.incompatibility(of: account) : nil
         return Toggle(isOn: Binding(
             get: { selection.contains(account.id) },
             set: { if $0 { selection.insert(account.id) } else { selection.remove(account.id) } }
@@ -149,16 +192,122 @@ struct ExportView: View {
         }
     }
 
-    private func showCodes() {
-        Task {
-            guard await lock.confirmIdentity(reason: String(localized: "показать секретные ключи для переноса")) else { return }
-            let accounts = store.profiles.flatMap(\.accounts).filter { selection.contains($0.id) }
-            page = 0
-            codes = GoogleMigration.encode(accounts)
+    /// Выбранные аккаунты в порядке профилей.
+    private var selectedAccounts: [OTPAccount] {
+        store.profiles.flatMap(\.accounts).filter { selection.contains($0.id) }
+    }
+
+    /// Профили только с выбранными аккаунтами — для файла.
+    private var selectedProfiles: [Profile] {
+        store.profiles.compactMap { profile in
+            let accounts = profile.accounts.filter { selection.contains($0.id) }
+            guard !accounts.isEmpty else { return nil }
+            var copy = profile
+            copy.accounts = accounts
+            return copy
         }
     }
 
-    // MARK: QR-коды
+    // MARK: Файл
+
+    /// `nil` — пароль подходит.
+    private var passwordProblem: LocalizedStringKey? {
+        if password.count < 8 { return "Пароль должен быть не короче 8 символов" }
+        if confirmation != password { return "Пароли не совпадают" }
+        return nil
+    }
+
+    private var passwordStep: some View {
+        VStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Пароль для файла")
+                    .font(.title3.weight(.semibold))
+                Text("Файл будет зашифрован этим паролем. Без него файл не открыть, а восстановить пароль нельзя.")
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding([.horizontal, .top], 20)
+
+            Form {
+                Section {
+                    SecureField("Пароль", text: $password)
+                    SecureField("Повторите пароль", text: $confirmation)
+                } footer: {
+                    if let passwordProblem, !password.isEmpty {
+                        Text(passwordProblem).foregroundStyle(.orange)
+                    } else {
+                        Text("Аккаунтов в файле: \(selection.count)")
+                    }
+                }
+            }
+            .formStyle(.grouped)
+
+            HStack {
+                Button("Назад") { step = .selection }
+                Spacer()
+                Button("Отмена", role: .cancel) { dismiss() }
+                    .keyboardShortcut(.cancelAction)
+                Button(action: saveFile) {
+                    if isSealing {
+                        ProgressView().controlSize(.small)
+                    } else {
+                        Text("Сохранить файл…")
+                    }
+                }
+                .keyboardShortcut(.defaultAction)
+                .buttonStyle(.glassProminent)
+                .disabled(passwordProblem != nil || isSealing)
+            }
+            .controlSize(.large)
+            .padding([.horizontal, .bottom], 20)
+        }
+        .fileExporter(
+            isPresented: $isSaving,
+            document: document,
+            contentType: BackupFile.contentType,
+            defaultFilename: "Authenticator " + Date.now.formatted(.iso8601.year().month().day())
+        ) { result in
+            switch result {
+            case .success:
+                dismiss()
+            case .failure(let error as CocoaError) where error.code == .userCancelled:
+                break
+            case .failure(let error):
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
+
+    private func saveFile() {
+        Task {
+            guard await lock.confirmIdentity(reason: String(localized: "сохранить резервную копию с секретными ключами")) else { return }
+            isSealing = true
+            defer { isSealing = false }
+            let profiles = selectedProfiles
+            let password = password
+            do {
+                // PBKDF2 занимает доли секунды — не держим на нём интерфейс.
+                let data = try await Task.detached(priority: .userInitiated) {
+                    try BackupFile.seal(profiles, password: password)
+                }.value
+                document = BackupDocument(data: data)
+                isSaving = true
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
+
+    // MARK: QR-коды для Google Authenticator
+
+    private func showCodes() {
+        Task {
+            guard await lock.confirmIdentity(reason: String(localized: "показать секретные ключи для переноса")) else { return }
+            page = 0
+            step = .codes(GoogleMigration.encode(selectedAccounts))
+        }
+    }
 
     private func codeStep(_ codes: [(accounts: [OTPAccount], link: String)]) -> some View {
         let code = codes[min(page, codes.count - 1)]
@@ -171,24 +320,7 @@ struct ExportView: View {
                     .multilineTextAlignment(.center)
             }
 
-            Group {
-                if isAppActive, let image = QRCodeImage.make(code.link) {
-                    Image(decorative: image, scale: 1)
-                        .interpolation(.none)
-                        .resizable()
-                        .scaledToFit()
-                        .padding(18)
-                        .background(.white, in: .rect(cornerRadius: 18))
-                } else {
-                    RoundedRectangle(cornerRadius: 18)
-                        .fill(.quaternary)
-                        .overlay {
-                            Label("Код скрыт, пока приложение неактивно", systemImage: "eye.slash")
-                                .foregroundStyle(.secondary)
-                        }
-                }
-            }
-            .frame(width: 300, height: 300)
+            SecretQRCodeView(text: code.link)
 
             Text(code.accounts.map(\.title).joined(separator: ", "))
                 .font(.callout)
