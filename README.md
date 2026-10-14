@@ -1,50 +1,51 @@
 # Authenticator
 
-Минималистичный аутентификатор для macOS 26: коды двухфакторной аутентификации (TOTP и HOTP) в нативном интерфейсе на SwiftUI с Liquid Glass.
+A minimal authenticator for macOS 26: two-factor codes (TOTP and HOTP) in a native SwiftUI interface with Liquid Glass.
 
-Приложение работает полностью офлайн. У него нет доступа к сети и нет сторонних зависимостей, а секретные ключи хранятся только на вашем Mac в зашифрованном виде.
+The app works entirely offline. It has no network access and no third-party dependencies, and your secret keys are stored only on your Mac, encrypted.
 
-## Возможности
+## Features
 
-- Коды TOTP и HOTP (RFC 6238 и RFC 4226): SHA-1, SHA-256 и SHA-512, от 6 до 8 цифр.
-- Профили с названием, цветом и значком, чтобы разделять, например, личные и рабочие аккаунты.
-- Импорт QR-кодов: перетащите картинку из Finder, Telegram или браузера, вставьте её через ⌘V или выберите файл.
-- Перенос из Google Authenticator: поддерживается его формат экспорта `otpauth-migration://`, в том числе когда аккаунты разбиты на несколько QR-кодов.
-- Ссылки `otpauth://` и ручной ввод ключа.
-- Блокировка через Touch ID или пароль Mac: при запуске, при блокировке экрана, во сне и через заданное время в фоне.
-- Код копируется по клику, а через 30 секунд буфер обмена очищается.
-- Поиск по кодам (⌘F) и по профилям (⇧⌘F).
+- TOTP and HOTP codes (RFC 6238 and RFC 4226): SHA-1, SHA-256 and SHA-512, 6 to 8 digits.
+- Profiles with a name, color and icon, for example to keep personal and work accounts apart.
+- QR code import: drag an image from Finder, Telegram or a browser, paste it with ⌘V, or choose a file.
+- Transfer from Google Authenticator: its export format (`otpauth-migration://`) is supported, including exports split across several QR codes.
+- `otpauth://` links and manual key entry.
+- Lock with Touch ID or your Mac password: on launch, when the screen locks, on sleep and after a set time in the background.
+- Click a code to copy it; the clipboard is cleared after 30 seconds.
+- Search codes (⌘F) and profiles (⇧⌘F).
+- Interface in English and Russian, following the macOS language.
 
-## Безопасность
+## Security
 
 | | |
 |---|---|
-| Сеть | Приложение работает в песочнице macOS без права на сетевые соединения: система не даст ему ничего отправить. |
-| Зависимости | Только системные фреймворки Apple: SwiftUI, CryptoKit, Security, LocalAuthentication, Vision. |
-| Хранение | Все данные лежат в одном файле, зашифрованном AES-256-GCM. Случайный 256-битный ключ хранится в связке ключей. |
-| Память | Пока приложение заблокировано, хранилище не расшифровано. |
-| QR-коды | Распознаются на устройстве через фреймворк Vision. |
-| Буфер обмена | Код помечается как скрытый для менеджеров буфера обмена и стирается через 30 секунд. |
+| Network | The app runs in the macOS sandbox without the network entitlement, so the system won't let it send anything. |
+| Dependencies | Only Apple system frameworks: SwiftUI, CryptoKit, Security, LocalAuthentication, Vision. |
+| Storage | All data lives in one file encrypted with AES-256-GCM. The random 256-bit key is stored in the Keychain. |
+| Memory | While the app is locked, the vault isn't decrypted. |
+| QR codes | Recognized on device with the Vision framework. |
+| Clipboard | Codes are marked as concealed for clipboard managers and erased after 30 seconds. |
 
-Права собранного приложения можно проверить так:
+You can check the entitlements of a built app:
 
 ```bash
 codesign -d --entitlements - Authenticator.app
 ```
 
-В выводе будут только `com.apple.security.app-sandbox` и `com.apple.security.files.user-selected.read-only` — чтение файлов, которые вы сами выбрали в окне «Открыть». В отладочной сборке добавляется `com.apple.security.get-task-allow` для отладчика Xcode. Права на сеть нет.
+The output lists only `com.apple.security.app-sandbox` and `com.apple.security.files.user-selected.read-only`, which allows reading files you pick in the Open dialog. Debug builds also include `com.apple.security.get-task-allow` for the Xcode debugger. There is no network entitlement.
 
-Ограничения, о которых стоит знать:
+Limitations worth knowing:
 
-- Блокировка через Touch ID защищает интерфейс. Ключ хранилища лежит в связке ключей входа и доступен приложению, пока вы вошли в систему.
-- Хранилище не синхронизируется через iCloud, а экспорта пока нет. Сохраните резервные коды, которые выдают сервисы при включении двухфакторной защиты.
+- The Touch ID lock protects the interface. The vault key is kept in the login keychain and is available to the app while you're logged in.
+- The vault doesn't sync through iCloud, and there's no export yet. Keep the backup codes that services give you when you turn on two-factor authentication.
 
-## Требования
+## Requirements
 
-- macOS 26 Tahoe или новее
-- Xcode 26 или новее для сборки
+- macOS 26 Tahoe or later
+- Xcode 26 or later to build
 
-## Сборка
+## Building
 
 ```bash
 git clone git@github.com:wannabedigital/authenticator.git
@@ -52,48 +53,48 @@ cd authenticator
 open Authenticator.xcodeproj
 ```
 
-В Xcode выберите свою команду: таргет Authenticator → Signing & Capabilities → Team. Подойдёт бесплатный Personal Team, для которого достаточно войти своим Apple ID. Затем нажмите ⌘R.
+In Xcode, choose your team: Authenticator target → Signing & Capabilities → Team. A free Personal Team works; you only need to sign in with your Apple ID. Then press ⌘R.
 
-Если выбрать Team: None, Xcode подпишет приложение локально. Оно будет работать, но после каждой пересборки macOS станет заново спрашивать доступ к связке ключей.
+If you choose Team: None, Xcode signs the app locally. It works, but macOS asks for Keychain access again after every rebuild.
 
-## Перенос из Google Authenticator
+## Moving from Google Authenticator
 
-1. В Google Authenticator на iPhone откройте меню, выберите перенос аккаунтов, затем экспорт, и отметьте нужные аккаунты.
-2. Сделайте скриншот QR-кода. Если кодов несколько, снимите каждый.
-3. Перенесите скриншоты на Mac, например через AirDrop.
-4. В Authenticator нажмите «+» и перетащите скриншоты в зону импорта.
-5. Удалите скриншоты: в них ваши секретные ключи.
+1. In Google Authenticator on your iPhone, open the menu, choose to transfer accounts, then export, and select the accounts.
+2. Take a screenshot of the QR code. If there are several codes, capture each one.
+3. Move the screenshots to your Mac, for example with AirDrop.
+4. In Authenticator, click + and drag the screenshots onto the import area.
+5. Delete the screenshots: they contain your secret keys.
 
-## Горячие клавиши
+## Keyboard shortcuts
 
-| Сочетание | Действие |
+| Shortcut | Action |
 |---|---|
-| ⌘N | Новый аккаунт |
-| ⇧⌘N | Новый профиль |
-| ⌘F | Найти код |
-| ⇧⌘F | Найти профиль |
-| ⌃⌘L | Заблокировать |
-| ⌘, | Настройки |
-| ⌘V | Вставить QR-код, когда курсор над зоной импорта |
+| ⌘N | New account |
+| ⇧⌘N | New profile |
+| ⌘F | Find code |
+| ⇧⌘F | Find profile |
+| ⌃⌘L | Lock |
+| ⌘, | Settings |
+| ⌘V | Paste a QR code while hovering over the import area |
 
-## Структура
+## Project structure
 
 ```
 Authenticator/
-├── App/        точка входа и меню
-├── Core/       Base32, генерация кодов, otpauth://, формат Google Authenticator
-├── Import/     распознавание QR-кодов, перетаскивание и буфер обмена
-├── Security/   блокировка через Touch ID
-├── Storage/    шифрование, связка ключей, профили
-└── Views/      интерфейс
-Config/         права песочницы
+├── App/        entry point and menus
+├── Core/       Base32, code generation, otpauth://, Google Authenticator format
+├── Import/     QR recognition, drag and drop, clipboard
+├── Security/   Touch ID lock
+├── Storage/    encryption, Keychain, profiles
+└── Views/      interface
+Config/         sandbox entitlements
 ```
 
-## Планы
+## Roadmap
 
-- Экспорт в Google Authenticator через QR-коды
-- Зашифрованная резервная копия
+- Export to Google Authenticator via QR codes
+- Encrypted backup
 
-## Лицензия
+## License
 
 [MIT](LICENSE)
