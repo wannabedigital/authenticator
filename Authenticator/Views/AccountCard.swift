@@ -65,16 +65,17 @@ struct AccountCard: View {
 }
 
 /// Кружок с первой буквой сервиса; цвет стабилен для одного и того же названия.
-private struct Monogram: View {
+struct Monogram: View {
     let text: String
+    var size: CGFloat = 40
 
     private static let palette: [Color] = [.blue, .indigo, .purple, .pink, .red, .orange, .teal, .green, .mint, .cyan]
 
     var body: some View {
         Text(text.first.map { String($0).uppercased() } ?? "?")
-            .font(.system(size: 17, weight: .semibold, design: .rounded))
+            .font(.system(size: size * 0.43, weight: .semibold, design: .rounded))
             .foregroundStyle(.white)
-            .frame(width: 40, height: 40)
+            .frame(width: size, height: size)
             .background(color.gradient, in: .circle)
     }
 
