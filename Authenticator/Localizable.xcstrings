@@ -48,6 +48,22 @@
     "OK": {
       "shouldTranslate": false
     },
+    "QR-код %lld из %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "QR code %lld of %lld"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "QR-код %lld из %lld"
+          }
+        }
+      }
+    },
     "QR-код на изображении не найден.": {
       "localizations": {
         "en": {
@@ -117,6 +133,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Алгоритм"
+          }
+        }
+      }
+    },
+    "Алгоритм %@ — Google Authenticator поддерживает только SHA1": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ algorithm — Google Authenticator supports only SHA1"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Алгоритм %@ — Google Authenticator поддерживает только SHA1"
           }
         }
       }
@@ -249,6 +281,22 @@
         }
       }
     },
+    "Выберите аккаунты. Недоступны те, чьи коды Google Authenticator показал бы неверно.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose the accounts to transfer. Accounts whose codes Google Authenticator would show incorrectly are unavailable."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выберите аккаунты. Недоступны те, чьи коды Google Authenticator показал бы неверно."
+          }
+        }
+      }
+    },
     "Выберите профиль": {
       "localizations": {
         "en": {
@@ -265,6 +313,22 @@
         }
       }
     },
+    "Выбрать все": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select All"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выбрать все"
+          }
+        }
+      }
+    },
     "Голубой": {
       "localizations": {
         "en": {
@@ -277,6 +341,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Голубой"
+          }
+        }
+      }
+    },
+    "Готово": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Готово"
           }
         }
       }
@@ -521,6 +601,22 @@
         }
       }
     },
+    "Код скрыт, пока приложение неактивно": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Code hidden while the app is inactive"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Код скрыт, пока приложение неактивно"
+          }
+        }
+      }
+    },
     "Коды расшифровываются только после подтверждения.": {
       "localizations": {
         "en": {
@@ -613,6 +709,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Мятный"
+          }
+        }
+      }
+    },
+    "На iPhone откройте меню, выберите перенос аккаунтов, затем импорт, и наведите камеру на код.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On your iPhone, open the menu, choose to transfer accounts, then import, and point the camera at the code."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "На iPhone откройте меню, выберите перенос аккаунтов, затем импорт, и наведите камеру на код."
           }
         }
       }
@@ -757,6 +869,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Найти профиль…"
+          }
+        }
+      }
+    },
+    "Не делайте скриншотов: в кодах ваши секретные ключи.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Don’t take screenshots: these codes contain your secret keys."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не делайте скриншотов: в кодах ваши секретные ключи."
           }
         }
       }
@@ -969,6 +1097,22 @@
         }
       }
     },
+    "Отсканируйте в Google Authenticator": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan with Google Authenticator"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отсканируйте в Google Authenticator"
+          }
+        }
+      }
+    },
     "Ошибка связки ключей (%d): %@": {
       "localizations": {
         "en": {
@@ -1017,6 +1161,22 @@
         }
       }
     },
+    "Перенос в Google Authenticator": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer to Google Authenticator"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перенос в Google Authenticator"
+          }
+        }
+      }
+    },
     "Перетащите QR-код сюда": {
       "localizations": {
         "en": {
@@ -1045,6 +1205,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Период"
+          }
+        }
+      }
+    },
+    "Период %lld с — Google Authenticator поддерживает только 30 с": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld-second period — Google Authenticator supports only 30 seconds"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Период %lld с — Google Authenticator поддерживает только 30 с"
           }
         }
       }
@@ -1145,6 +1321,22 @@
         }
       }
     },
+    "Показать QR-коды": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show QR Codes"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Показать QR-коды"
+          }
+        }
+      }
+    },
     "Получено QR-кодов: %lld из %lld. Добавьте остальные, чтобы перенести все аккаунты.": {
       "localizations": {
         "en": {
@@ -1173,6 +1365,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Получены все QR-коды: %lld из %lld."
+          }
+        }
+      }
+    },
+    "Предыдущий код": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Previous Code"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Предыдущий код"
           }
         }
       }
@@ -1401,6 +1609,22 @@
         }
       }
     },
+    "Снять выбор": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deselect All"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Снять выбор"
+          }
+        }
+      }
+    },
     "Создать": {
       "localizations": {
         "en": {
@@ -1625,6 +1849,22 @@
         }
       }
     },
+    "Цифр в коде: %lld — Google Authenticator показывает только 6": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld digits — Google Authenticator shows only 6"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Цифр в коде: %lld — Google Authenticator показывает только 6"
+          }
+        }
+      }
+    },
     "Через 1 минуту": {
       "localizations": {
         "en": {
@@ -1685,6 +1925,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Через 5 минут"
+          }
+        }
+      }
+    },
+    "Экспорт в Google Authenticator…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export to Google Authenticator…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Экспорт в Google Authenticator…"
           }
         }
       }
@@ -1813,6 +2069,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "показать коды двухфакторной аутентификации"
+          }
+        }
+      }
+    },
+    "показать секретные ключи для переноса": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "show secret keys for the transfer"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "показать секретные ключи для переноса"
           }
         }
       }
