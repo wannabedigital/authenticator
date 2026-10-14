@@ -10,6 +10,7 @@ The app works entirely offline. It has no network access and no third-party depe
 - Profiles with a name, color and icon, for example to keep personal and work accounts apart.
 - QR code import: drag an image from Finder, Telegram or a browser, paste it with ⌘V, or choose a file.
 - Transfer from Google Authenticator: its export format (`otpauth-migration://`) is supported, including exports split across several QR codes.
+- Transfer to Google Authenticator: compatible accounts are shown as QR codes to scan on your iPhone.
 - `otpauth://` links and manual key entry.
 - Lock with Touch ID or your Mac password: on launch, when the screen locks, on sleep and after a set time in the background.
 - Click a code to copy it; the clipboard is cleared after 30 seconds.
@@ -71,6 +72,14 @@ If you choose Team: None, Xcode signs the app locally. It works, but macOS asks 
 4. In Authenticator, click + and drag the screenshots onto the import area.
 5. Delete the screenshots: they contain your secret keys.
 
+## Moving to Google Authenticator
+
+1. In Authenticator, choose File → Export to Google Authenticator.
+2. Select the accounts and confirm with Touch ID.
+3. In Google Authenticator on your iPhone, open the menu, choose to transfer accounts, then import, and scan each QR code.
+
+Google Authenticator supports only SHA-1 codes with 6 digits and a 30-second period, so other accounts can't be exported and are shown as unavailable.
+
 ## Keyboard shortcuts
 
 | Shortcut | Action |
@@ -79,6 +88,7 @@ If you choose Team: None, Xcode signs the app locally. It works, but macOS asks 
 | ⇧⌘N | New profile |
 | ⌘F | Find code |
 | ⇧⌘F | Find profile |
+| ⇧⌘E | Export to Google Authenticator |
 | ⌃⌘L | Lock |
 | ⌘, | Settings |
 | ⌘V | Paste a QR code while hovering over the import area |
@@ -98,7 +108,6 @@ Config/         sandbox entitlements
 
 ## Roadmap
 
-- Export to Google Authenticator via QR codes
 - Encrypted backup
 
 ## License
