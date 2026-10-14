@@ -26,6 +26,11 @@ extension FocusedValues {
         get { self[ExportActionKey.self] }
         set { self[ExportActionKey.self] = newValue }
     }
+
+    var openBackupAction: (() -> Void)? {
+        get { self[OpenBackupActionKey.self] }
+        set { self[OpenBackupActionKey.self] = newValue }
+    }
 }
 
 private struct AddAccountActionKey: FocusedValueKey {
@@ -48,6 +53,10 @@ private struct ExportActionKey: FocusedValueKey {
     typealias Value = () -> Void
 }
 
+private struct OpenBackupActionKey: FocusedValueKey {
+    typealias Value = () -> Void
+}
+
 /// Пункты меню «Файл» и «Правка» с горячими клавишами.
 struct AppCommands: Commands {
     let lock: AppLock
@@ -56,6 +65,7 @@ struct AppCommands: Commands {
     @FocusedValue(\.findAccountAction) private var findAccount
     @FocusedValue(\.findProfileAction) private var findProfile
     @FocusedValue(\.exportAction) private var export
+    @FocusedValue(\.openBackupAction) private var openBackup
 
     var body: some Commands {
         CommandGroup(replacing: .newItem) {
@@ -68,8 +78,11 @@ struct AppCommands: Commands {
         }
         CommandGroup(after: .newItem) {
             Divider()
-            Button("Экспорт в Google Authenticator…") { export?() }
-                .keyboardShortcut("e", modifiers: [.command, .shift])
+            Button("Открыть резервную копию…") { openBackup?() }
+                .keyboardShortcut("o")
+                .disabled(openBackup == nil)
+            Button("Экспорт…") { export?() }
+                .keyboardShortcut("e")
                 .disabled(export == nil)
             Divider()
             Button("Заблокировать") { lock.lock() }

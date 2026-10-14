@@ -9,6 +9,9 @@ struct ContentView: View {
     @State private var profileSearch = SearchState()
     @State private var isAddingAccount = false
     @State private var isExporting = false
+    @State private var isPickingBackup = false
+    @State private var backupToOpen: PendingBackup?
+    @State private var backupError: String?
 
     var body: some View {
         if lock.isLocked || !store.isLoaded {
@@ -65,6 +68,25 @@ struct ContentView: View {
             .sheet(isPresented: $isExporting) {
                 ExportView()
             }
+            .focusedSceneValue(\.openBackupAction) { isPickingBackup = true }
+            .fileImporter(isPresented: $isPickingBackup, allowedContentTypes: [BackupFile.contentType]) { result in
+                guard case .success(let url) = result else { return }
+                let isScoped = url.startAccessingSecurityScopedResource()
+                defer { if isScoped { url.stopAccessingSecurityScopedResource() } }
+                if let data = try? Data(contentsOf: url), BackupFile.isBackup(data) {
+                    backupToOpen = PendingBackup(data: data)
+                } else {
+                    backupError = String(localized: "Это не файл резервной копии Authenticator")
+                }
+            }
+            .sheet(item: $backupToOpen) { backup in
+                BackupImportView(data: backup.data)
+            }
+            .alert("Не удалось открыть файл", isPresented: Binding(get: { backupError != nil }, set: { if !$0 { backupError = nil } })) {
+                Button("OK") {}
+            } message: {
+                Text(backupError ?? "")
+            }
             .sheet(isPresented: $isAddingAccount) {
                 if let selection {
                     AddAccountView(profileID: selection)
@@ -91,4 +113,10 @@ struct ContentView: View {
             set: { if !$0 { store.saveError = nil } }
         )
     }
+}
+
+/// Прочитанный файл резервной копии, который ждёт пароля.
+private struct PendingBackup: Identifiable {
+    let id = UUID()
+    let data: Data
 }
