@@ -11,3 +11,6 @@ build/
 *.xcarchive
 *.dSYM
 *.dSYM.zip
+
+# Готовые файлы релизов
+dist/
