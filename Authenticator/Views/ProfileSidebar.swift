@@ -4,39 +4,41 @@ struct ProfileSidebar: View {
     @Environment(VaultStore.self) private var store
     @Binding var selection: Profile.ID?
 
-    @State private var isEditingName = false
-    /// `nil` — создаём новый профиль, иначе переименовываем существующий.
-    @State private var editedProfileID: Profile.ID?
-    @State private var draftName = ""
+    @State private var isCreatingProfile = false
+    @State private var profileToEdit: Profile?
     @State private var profileToDelete: Profile?
 
     var body: some View {
         List(selection: $selection) {
             Section("Профили") {
                 ForEach(store.profiles) { profile in
-                    Label(profile.name, systemImage: "person.crop.circle")
-                        .badge(profile.accounts.count)
-                        .contextMenu {
-                            Button("Переименовать…", systemImage: "pencil") { beginRename(profile) }
-                            Divider()
-                            Button("Удалить…", systemImage: "trash", role: .destructive) { profileToDelete = profile }
-                                .disabled(store.profiles.count < 2)
-                        }
+                    Label {
+                        Text(profile.name)
+                    } icon: {
+                        ProfileIcon(profile: profile)
+                    }
+                    .badge(profile.accounts.count)
+                    .contextMenu {
+                        Button("Изменить…", systemImage: "pencil") { profileToEdit = profile }
+                        Divider()
+                        Button("Удалить…", systemImage: "trash", role: .destructive) { profileToDelete = profile }
+                            .disabled(store.profiles.count < 2)
+                    }
                 }
             }
         }
         .navigationSplitViewColumnWidth(min: 190, ideal: 220)
         .safeAreaInset(edge: .bottom) {
-            Button("Новый профиль", systemImage: "plus", action: beginCreate)
+            Button("Новый профиль", systemImage: "plus") { isCreatingProfile = true }
                 .buttonStyle(.glass)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(12)
         }
-        .alert(editedProfileID == nil ? "Новый профиль" : "Переименовать профиль", isPresented: $isEditingName) {
-            TextField("Название", text: $draftName)
-            Button("Отмена", role: .cancel) {}
-            Button(editedProfileID == nil ? "Создать" : "Сохранить", action: commitName)
-                .disabled(draftName.trimmed.isEmpty)
+        .sheet(isPresented: $isCreatingProfile) {
+            ProfileEditorView(profile: nil, suggestedColor: nextColor) { selection = $0 }
+        }
+        .sheet(item: $profileToEdit) { profile in
+            ProfileEditorView(profile: profile)
         }
         .confirmationDialog(
             "Удалить профиль «\(profileToDelete?.name ?? "")»?",
@@ -54,25 +56,10 @@ struct ProfileSidebar: View {
         }
     }
 
-    private func beginCreate() {
-        editedProfileID = nil
-        draftName = ""
-        isEditingName = true
-    }
-
-    private func beginRename(_ profile: Profile) {
-        editedProfileID = profile.id
-        draftName = profile.name
-        isEditingName = true
-    }
-
-    private func commitName() {
-        let name = draftName.trimmed
-        guard !name.isEmpty else { return }
-        if let editedProfileID {
-            store.renameProfile(editedProfileID, to: name)
-        } else {
-            selection = store.addProfile(named: name)
-        }
+    /// Новому профилю предлагаем цвет, которого ещё нет, чтобы профили сразу различались.
+    private var nextColor: ProfileColor {
+        let used = Set(store.profiles.map(\.color))
+        let palette: [ProfileColor] = [.blue, .orange, .green, .purple, .pink, .teal, .red, .indigo, .yellow, .mint, .brown, .cyan, .gray]
+        return palette.first { !used.contains($0) } ?? .blue
     }
 }

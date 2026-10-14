@@ -32,14 +32,18 @@ final class VaultStore {
     // MARK: Профили
 
     @discardableResult
-    func addProfile(named name: String) -> Profile.ID {
-        let profile = Profile(name: name)
+    func addProfile(named name: String, symbol: String, color: ProfileColor) -> Profile.ID {
+        let profile = Profile(name: name, symbol: symbol, color: color)
         mutate { $0.profiles.append(profile) }
         return profile.id
     }
 
-    func renameProfile(_ id: Profile.ID, to name: String) {
-        mutateProfile(id) { $0.name = name }
+    func updateProfile(_ id: Profile.ID, name: String, symbol: String, color: ProfileColor) {
+        mutateProfile(id) {
+            $0.name = name
+            $0.symbol = symbol
+            $0.color = color
+        }
     }
 
     func deleteProfile(_ id: Profile.ID) {
