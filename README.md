@@ -40,6 +40,12 @@ Limitations worth knowing:
 - The Touch ID lock protects the interface. The vault key is kept in the login keychain and is available to the app while you're logged in.
 - The vault doesn't sync through iCloud, and there's no export yet. Keep the backup codes that services give you when you turn on two-factor authentication.
 
+## Installation
+
+Download the latest `.dmg` from [Releases](https://github.com/wannabedigital/authenticator/releases) and drag Authenticator into Applications.
+
+The app isn't notarized by Apple, so on first launch macOS blocks it. Click **Done**, then go to **System Settings → Privacy & Security**, click **Open Anyway** next to the message about Authenticator, and confirm. You only need to do this once. The release notes have step-by-step instructions in English and Russian.
+
 ## Requirements
 
 - macOS 26 Tahoe or later
