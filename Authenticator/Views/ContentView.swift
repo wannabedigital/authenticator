@@ -4,7 +4,7 @@ struct ContentView: View {
     @Environment(VaultStore.self) private var store
     @Environment(AppLock.self) private var lock
     @State private var selection: Profile.ID?
-    @State private var searchText = ""
+    @State private var accountSearch = SearchState()
     @State private var isAddingAccount = false
 
     var body: some View {
@@ -21,15 +21,28 @@ struct ContentView: View {
             NavigationSplitView {
                 ProfileSidebar(selection: $selection)
             } detail: {
-                if let selection, let profile = store.profile(withID: selection) {
-                    AccountGrid(profile: profile, searchText: searchText)
-                        .navigationSplitViewColumnWidth(min: WindowLayout.detailMinWidth, ideal: 660)
-                } else {
-                    ContentUnavailableView("Выберите профиль", systemImage: "person.crop.circle")
+                Group {
+                    if let selection, let profile = store.profile(withID: selection) {
+                        AccountGrid(profile: profile, searchText: accountSearch.query)
+                    } else {
+                        ContentUnavailableView("Выберите профиль", systemImage: "person.crop.circle")
+                    }
                 }
+                .safeAreaBar(edge: .top) {
+                    if accountSearch.isPresented {
+                        SearchField(text: $accountSearch.query, prompt: "Поиск кодов", focusRequest: accountSearch.focusRequest) {
+                            withAnimation(.snappy) { accountSearch.dismiss() }
+                        }
+                        .frame(maxWidth: 360)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, WindowLayout.gridPadding)
+                        .padding(.vertical, 8)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                    }
+                }
+                .navigationSplitViewColumnWidth(min: WindowLayout.detailMinWidth, ideal: 660)
             }
             .frame(minWidth: WindowLayout.minWidth, minHeight: WindowLayout.minHeight)
-            .searchable(text: $searchText, prompt: "Поиск")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button("Добавить аккаунт", systemImage: "plus") { isAddingAccount = true }
@@ -37,6 +50,9 @@ struct ContentView: View {
                 }
             }
             .focusedSceneValue(\.addAccountAction, selection == nil ? nil : { isAddingAccount = true })
+            .focusedSceneValue(\.findAccountAction, selection == nil ? nil : {
+                withAnimation(.snappy) { accountSearch.present() }
+            })
             .sheet(isPresented: $isAddingAccount) {
                 if let selection {
                     AddAccountView(profileID: selection)
