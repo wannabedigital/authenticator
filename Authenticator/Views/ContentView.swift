@@ -16,18 +16,19 @@ struct ContentView: View {
             } description: {
                 Text(loadError)
             }
-            .frame(minWidth: 480, minHeight: 320)
+            .frame(minWidth: WindowLayout.minWidth, minHeight: WindowLayout.minHeight)
         } else {
             NavigationSplitView {
                 ProfileSidebar(selection: $selection)
             } detail: {
                 if let selection, let profile = store.profile(withID: selection) {
                     AccountGrid(profile: profile, searchText: searchText)
+                        .navigationSplitViewColumnWidth(min: WindowLayout.detailMinWidth, ideal: 660)
                 } else {
                     ContentUnavailableView("Выберите профиль", systemImage: "person.crop.circle")
                 }
             }
-            .frame(minWidth: 640, minHeight: 400)
+            .frame(minWidth: WindowLayout.minWidth, minHeight: WindowLayout.minHeight)
             .searchable(text: $searchText, prompt: "Поиск")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {

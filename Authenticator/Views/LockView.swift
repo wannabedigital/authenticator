@@ -36,6 +36,6 @@ struct LockView: View {
         .multilineTextAlignment(.center)
         .padding(40)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .frame(minWidth: 640, minHeight: 400)
+        .frame(minWidth: WindowLayout.minWidth, minHeight: WindowLayout.minHeight)
     }
 }

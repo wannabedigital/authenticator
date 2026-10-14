@@ -32,7 +32,7 @@ struct AccountGrid: View {
                 ScrollView {
                     // Тикаем ровно на границе секунды, чтобы коды менялись без задержки.
                     TimelineView(.periodic(from: Date(timeIntervalSince1970: Date.now.timeIntervalSince1970.rounded(.down)), by: 1)) { context in
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 260), spacing: 16)], spacing: 16) {
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: WindowLayout.cardMinWidth), spacing: WindowLayout.cardSpacing)], spacing: WindowLayout.cardSpacing) {
                             ForEach(accounts) { account in
                                 AccountCard(
                                     account: account,
@@ -44,7 +44,7 @@ struct AccountGrid: View {
                                 .contextMenu { menu(for: account) }
                             }
                         }
-                        .padding(20)
+                        .padding(WindowLayout.gridPadding)
                     }
                 }
             }
