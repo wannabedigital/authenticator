@@ -27,10 +27,13 @@ struct ProfileEditorView: View {
                 ProfileIcon(symbol: symbol, color: color, size: 64)
                     .animation(.snappy, value: color)
                 TextField("Название", text: $name, prompt: Text("Работа"))
-                    .textFieldStyle(.roundedBorder)
-                    .font(.title3)
+                    .textFieldStyle(.plain)
+                    .font(.title3.weight(.medium))
                     .multilineTextAlignment(.center)
-                    .frame(maxWidth: 260)
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 14)
+                    .background(.quaternary.opacity(0.6), in: .capsule)
+                    .frame(maxWidth: 280)
             }
             .padding(.top, 24)
 
@@ -50,11 +53,12 @@ struct ProfileEditorView: View {
                 onConfirm: save
             )
         }
-        .frame(width: 420)
+        .frame(width: 480)
     }
 
     private var colorPicker: some View {
-        HStack(spacing: 8) {
+        // Сетка с гибкими колонками сжимается по ширине листа, а не растягивает его.
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: ProfileColor.allCases.count), spacing: 4) {
             ForEach(ProfileColor.allCases, id: \.self) { option in
                 Button {
                     color = option
@@ -73,7 +77,7 @@ struct ProfileEditorView: View {
                 .accessibilityAddTraits(color == option ? .isSelected : [])
             }
         }
-        .frame(maxWidth: .infinity)
+        .padding(.vertical, 2)
     }
 
     private var symbolPicker: some View {
