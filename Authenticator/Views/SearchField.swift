@@ -78,6 +78,9 @@ struct SearchField: NSViewRepresentable {
 
         func control(_ control: NSControl, textView: NSTextView, doCommandBy selector: Selector) -> Bool {
             guard selector == #selector(NSResponder.cancelOperation(_:)) else { return false }
+            // Пока поле растворяется, оно остаётся в окне — и в фокусе, вместе с рамкой.
+            // Снимаем фокус заранее, чтобы растворялось уже поле без рамки.
+            control.window?.makeFirstResponder(nil)
             parent.onDismiss()
             return true
         }
