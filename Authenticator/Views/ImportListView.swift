@@ -15,7 +15,6 @@ struct ImportListView: View {
             Section {
                 ForEach(accounts) { account in
                     HStack(spacing: 12) {
-                        Monogram(text: account.title, size: 30)
                         VStack(alignment: .leading, spacing: 1) {
                             Text(account.title)
                             if let subtitle = account.subtitle {

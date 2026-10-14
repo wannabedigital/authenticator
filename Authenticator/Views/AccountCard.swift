@@ -14,8 +14,6 @@ struct AccountCard: View {
         let expiresSoon = account.kind == .totp && account.secondsRemaining(at: date) <= 5
 
         HStack(spacing: 14) {
-            Monogram(text: account.title)
-
             VStack(alignment: .leading, spacing: 2) {
                 Text(account.title)
                     .font(.headline)
@@ -61,27 +59,6 @@ struct AccountCard: View {
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isButton)
         .accessibilityAction(named: "Скопировать код", onCopy)
-    }
-}
-
-/// Кружок с первой буквой сервиса; цвет стабилен для одного и того же названия.
-struct Monogram: View {
-    let text: String
-    var size: CGFloat = 40
-
-    private static let palette: [Color] = [.blue, .indigo, .purple, .pink, .red, .orange, .teal, .green, .mint, .cyan]
-
-    var body: some View {
-        Text(text.first.map { String($0).uppercased() } ?? "?")
-            .font(.system(size: size * 0.43, weight: .semibold, design: .rounded))
-            .foregroundStyle(.white)
-            .frame(width: size, height: size)
-            .background(color.gradient, in: .circle)
-    }
-
-    private var color: Color {
-        let sum = text.lowercased().unicodeScalars.reduce(0) { $0 &+ Int($1.value) }
-        return Self.palette[sum % Self.palette.count]
     }
 }
 
