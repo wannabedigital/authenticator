@@ -35,8 +35,6 @@ struct ContentView: View {
                         SearchField(text: $accountSearch.query, prompt: "Поиск кодов", focusRequest: accountSearch.focusRequest) {
                             withAnimation(.snappy) { accountSearch.dismiss() }
                         }
-                        .frame(maxWidth: 360)
-                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, WindowLayout.gridPadding)
                         .padding(.vertical, 8)
                         .transition(.move(edge: .top).combined(with: .opacity))
