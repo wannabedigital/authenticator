@@ -96,9 +96,10 @@
 				};
 			};
 			buildConfigurationList = 7A000000000000000000000B /* Build configuration list for PBXProject "Authenticator" */;
-			developmentRegion = ru;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				en,
 				ru,
 				Base,
 			);
