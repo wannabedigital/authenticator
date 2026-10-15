@@ -27,14 +27,9 @@ struct ContentView: View {
             NavigationSplitView(columnVisibility: $columnVisibility) {
                 ProfileSidebar(selection: $selection, search: $profileSearch)
             } detail: {
-                Group {
-                    if let selection, let profile = store.profile(withID: selection) {
-                        AccountGrid(profile: profile, searchText: accountSearch.query)
-                    } else {
-                        ContentUnavailableView("Выберите профиль", systemImage: "person.crop.circle")
-                    }
-                }
-                .safeAreaBar(edge: .top) {
+                // Обычная колонка, а не safeAreaBar: на macOS панель получает жёсткий край
+                // с разделителями над полем и под ним, а так поле лежит прямо на фоне окна.
+                VStack(spacing: 0) {
                     if accountSearch.isPresented {
                         SearchField(text: $accountSearch.query, prompt: String(localized: "Поиск кодов"), focusRequest: accountSearch.focusRequest) {
                             withAnimation(SearchState.animation) { accountSearch.dismiss() }
@@ -43,6 +38,16 @@ struct ContentView: View {
                         .padding(.vertical, 8)
                         .transition(.opacity)
                     }
+                    Group {
+                        if let selection, let profile = store.profile(withID: selection) {
+                            AccountGrid(profile: profile, searchText: accountSearch.query)
+                        } else {
+                            ContentUnavailableView("Выберите профиль", systemImage: "person.crop.circle")
+                        }
+                    }
+                    // Пустое состояние занимает ровно свой размер, и без растягивания
+                    // колонка центрирует его вместе с полем — поле уезжает в середину окна.
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 .navigationSplitViewColumnWidth(min: WindowLayout.detailMinWidth, ideal: 660)
             }
