@@ -45,10 +45,12 @@ struct ContentView: View {
                             ContentUnavailableView("Выберите профиль", systemImage: "person.crop.circle")
                         }
                     }
-                    // Пустое состояние занимает ровно свой размер, и без растягивания
-                    // колонка центрирует его вместе с полем — поле уезжает в середину окна.
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
+                // Пустое состояние колонка подгоняет по размеру и ставит в середину вместе с полем,
+                // растягивание через frame она не учитывает. Берём высоту самой колонки
+                // и прижимаем содержимое к верху — поле остаётся под панелью инструментов.
+                .containerRelativeFrame(.vertical, alignment: .top)
                 .navigationSplitViewColumnWidth(min: WindowLayout.detailMinWidth, ideal: 660)
             }
             .frame(minWidth: WindowLayout.minWidth, minHeight: WindowLayout.minHeight)
