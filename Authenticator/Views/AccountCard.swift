@@ -18,12 +18,13 @@ struct AccountCard: View {
                 Text(account.title)
                     .font(.headline)
                     .lineLimit(1)
-                if let subtitle = account.subtitle {
-                    Text(subtitle)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                }
+                // Вторая строка есть всегда — пустая, если аккаунт без имени:
+                // карточки одной высоты, а коды в ряду стоят на одном уровне.
+                Text(account.subtitle ?? " ")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .accessibilityHidden(account.subtitle == nil)
                 Text(OTPGenerator.grouped(code))
                     .font(.system(size: 28, weight: .semibold, design: .rounded).monospacedDigit())
                     .foregroundStyle(expiresSoon ? Color.orange : Color.primary)
