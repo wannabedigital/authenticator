@@ -46,6 +46,7 @@ struct ProfileEditorView: View {
                 }
             }
             .formStyle(.grouped)
+            .clippedAboveSheetFooter()
 
             SheetFooter(
                 confirmTitle: profile == nil ? "Создать" : "Сохранить",

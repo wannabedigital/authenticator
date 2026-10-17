@@ -105,6 +105,7 @@ struct AddAccountView: View {
                 }
             }
             .formStyle(.grouped)
+            .clippedAboveSheetFooter()
     }
 
     private func applyLink() {

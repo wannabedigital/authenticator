@@ -49,6 +49,7 @@ struct BackupImportView: View {
                 }
             }
             .formStyle(.grouped)
+            .clippedAboveSheetFooter()
 
             HStack {
                 Spacer()
@@ -126,6 +127,7 @@ struct BackupImportView: View {
                 }
             }
             .formStyle(.grouped)
+            .clippedAboveSheetFooter()
             .frame(minHeight: 220)
 
             HStack {

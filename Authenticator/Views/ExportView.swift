@@ -102,6 +102,7 @@ struct ExportView: View {
                 }
             }
             .formStyle(.grouped)
+            .clippedAboveSheetFooter()
 
             HStack {
                 Button(selection.isEmpty ? "Выбрать все" : "Снять выбор") {
@@ -242,6 +243,7 @@ struct ExportView: View {
                 }
             }
             .formStyle(.grouped)
+            .clippedAboveSheetFooter()
 
             HStack {
                 Button("Назад") { step = .selection }

@@ -25,6 +25,7 @@ struct EditAccountView: View {
                 }
             }
             .formStyle(.grouped)
+            .clippedAboveSheetFooter()
 
             SheetFooter(
                 confirmTitle: "Сохранить",

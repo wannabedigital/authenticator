@@ -48,5 +48,6 @@ struct ImportListView: View {
             }
         }
         .formStyle(.grouped)
+        .clippedAboveSheetFooter()
     }
 }
