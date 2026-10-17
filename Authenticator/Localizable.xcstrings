@@ -39,7 +39,7 @@
     "Authenticator": {
       "shouldTranslate": false
     },
-    "Authenticator заблокирован": {
+    "Authenticator под защитой": {
       "localizations": {
         "en": {
           "stringUnit": {
@@ -50,7 +50,7 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Authenticator заблокирован"
+            "value": "Authenticator под защитой"
           }
         }
       }
@@ -117,6 +117,22 @@
     },
     "Touch ID": {
       "shouldTranslate": false
+    },
+    "Touch ID временно недоступен. Введите пароль Mac.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Touch ID is temporarily unavailable. Enter your Mac password."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Touch ID временно недоступен. Введите пароль Mac."
+          }
+        }
+      }
     },
     "me@example.com": {
       "shouldTranslate": false
@@ -328,6 +344,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Введите пароль, который задали при экспорте."
+          }
+        }
+      }
+    },
+    "Ввести пароль…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter Password…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ввести пароль…"
           }
         }
       }
@@ -712,22 +744,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Индиго"
-          }
-        }
-      }
-    },
-    "Используйте %@, чтобы увидеть коды.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use %@ to see your codes."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Используйте %@, чтобы увидеть коды."
           }
         }
       }
@@ -1164,6 +1180,22 @@
         }
       }
     },
+    "Не удалось проверить Touch ID. Введите пароль Mac.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t check Touch ID. Enter your Mac password."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось проверить Touch ID. Введите пароль Mac."
+          }
+        }
+      }
+    },
     "Не удалось сохранить": {
       "localizations": {
         "en": {
@@ -1384,6 +1416,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Отмена"
+          }
+        }
+      }
+    },
+    "Отпечаток не распознан. Попробуйте ещё раз.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fingerprint not recognized. Try again."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отпечаток не распознан. Попробуйте ещё раз."
           }
         }
       }
@@ -1848,22 +1896,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Работа"
-          }
-        }
-      }
-    },
-    "Разблокировать": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unlock"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Разблокировать"
           }
         }
       }
@@ -2456,6 +2488,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Что импортировать"
+          }
+        }
+      }
+    },
+    "Чтобы снять защиту, введите пароль пользователя %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter the password for %@ to unlock."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чтобы снять защиту, введите пароль пользователя %@."
+          }
+        }
+      }
+    },
+    "Чтобы снять защиту, используйте Touch ID или введите пароль пользователя %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use Touch ID or enter the password for %@ to unlock."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чтобы снять защиту, используйте Touch ID или введите пароль пользователя %@."
           }
         }
       }
