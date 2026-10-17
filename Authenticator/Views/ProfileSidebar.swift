@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ProfileSidebar: View {
     @Environment(VaultStore.self) private var store
+    @Environment(AppLock.self) private var lock
     @Binding var selection: Profile.ID?
     @Binding var search: SearchState
 
@@ -34,6 +35,12 @@ struct ProfileSidebar: View {
             }
         }
         .navigationSplitViewColumnWidth(min: 190, ideal: 220, max: WindowLayout.sidebarMaxWidth)
+        .onChange(of: lock.isClosingSheets) { _, closing in
+            guard closing else { return }
+            isCreatingProfile = false
+            profileToEdit = nil
+            profileToDelete = nil
+        }
         .safeAreaBar(edge: .top) {
             if search.isPresented {
                 SearchField(text: $search.query, prompt: String(localized: "Поиск профилей"), focusRequest: search.focusRequest) {

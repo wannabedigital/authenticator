@@ -52,6 +52,12 @@ struct AccountGrid: View {
             }
         }
         .navigationTitle(profile.name)
+        .onChange(of: lock.isClosingSheets) { _, closing in
+            guard closing else { return }
+            accountToEdit = nil
+            accountForQRCode = nil
+            accountToDelete = nil
+        }
         .overlay(alignment: .bottom) {
             if copiedID != nil {
                 CopiedToast()

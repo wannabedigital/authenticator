@@ -105,6 +105,15 @@ struct ContentView: View {
             .onAppear {
                 if selection == nil { selection = store.profiles.first?.id }
             }
+            .onChange(of: lock.isClosingSheets) { _, closing in
+                guard closing else { return }
+                isAddingAccount = false
+                isExporting = false
+                isPickingBackup = false
+                backupToOpen = nil
+                backupError = nil
+                store.saveError = nil
+            }
             .onChange(of: store.profiles.map(\.id)) { _, ids in
                 if let selection, ids.contains(selection) { return }
                 selection = ids.first

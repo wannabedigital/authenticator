@@ -39,6 +39,8 @@ final class AppLock {
     private(set) var isLocked: Bool
     private(set) var isAuthenticating = false
     private(set) var errorMessage: String?
+    /// Перед блокировкой закрываются все листы. Окна с листами подписаны на это и закрывают свои.
+    private(set) var isClosingSheets = false
 
     @ObservationIgnored private let store: VaultStore
     @ObservationIgnored private let defaults = UserDefaults.standard
@@ -104,6 +106,32 @@ final class AppLock {
     }
 
     func lock() {
+        guard isEnabled, !isLocked, !isClosingSheets else { return }
+        // SwiftUI падает (BarAppearanceBridge), если сменить экран окна, пока к нему прикреплён лист.
+        // Поэтому сначала закрываем листы, а экран блокировки показываем, когда их не осталось.
+        guard hasAttachedSheets else {
+            applyLock()
+            return
+        }
+        isClosingSheets = true
+        Task {
+            for _ in 0..<20 where hasAttachedSheets {
+                try? await Task.sleep(for: .milliseconds(50))
+            }
+            // Если что-то не закрылось само (например, системное окно сохранения), закрываем принудительно.
+            for window in NSApp.windows {
+                if let sheet = window.attachedSheet { window.endSheet(sheet) }
+            }
+            isClosingSheets = false
+            applyLock()
+        }
+    }
+
+    private var hasAttachedSheets: Bool {
+        NSApp.windows.contains { $0.attachedSheet != nil }
+    }
+
+    private func applyLock() {
         guard isEnabled, !isLocked else { return }
         isLocked = true
         store.unload()
