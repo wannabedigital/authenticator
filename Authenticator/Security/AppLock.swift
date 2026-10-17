@@ -70,6 +70,31 @@ final class AppLock {
         return ("пароль", "lock.fill")
     }
 
+    /// Есть ли Touch ID, которым можно разблокировать прямо в окне.
+    var canUseTouchID: Bool {
+        LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+    }
+
+    /// Разблокировка через Touch ID прямо в окне: проверку показывает `LAAuthenticationView`,
+    /// связанный с этим `context`, а не системное окно. `nil` — успех, иначе код ошибки.
+    func unlockWithTouchID(_ context: LAContext) async -> LAError.Code? {
+        guard isLocked else { return nil }
+        let reason = String(localized: "показать коды двухфакторной аутентификации")
+        let failure: LAError.Code? = await withCheckedContinuation { continuation in
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, error in
+                continuation.resume(returning: success ? nil : (error as? LAError)?.code ?? .authenticationFailed)
+            }
+        }
+        if failure == nil, isLocked {
+            isLocked = false
+            resignedAt = nil
+            errorMessage = nil
+            store.load()
+        }
+        return failure
+    }
+
+    /// Разблокировка через системное окно: Touch ID или пароль Mac.
     func unlock() async {
         guard isLocked, !isAuthenticating else { return }
         guard await authenticate(reason: String(localized: "показать коды двухфакторной аутентификации")) else { return }
@@ -152,7 +177,8 @@ final class AppLock {
             lock()
         }
         resignedAt = nil
-        if isLocked {
+        // С Touch ID экран блокировки проверяет отпечаток сам, прямо в окне.
+        if isLocked, !canUseTouchID {
             Task { await unlock() }
         }
     }
