@@ -57,7 +57,7 @@ private struct OpenBackupActionKey: FocusedValueKey {
     typealias Value = () -> Void
 }
 
-/// Пункты меню «Файл» и «Правка» с горячими клавишами.
+/// Пункты меню приложения, «Файл» и «Правка» с горячими клавишами.
 struct AppCommands: Commands {
     let lock: AppLock
     @FocusedValue(\.addAccountAction) private var addAccount
@@ -84,9 +84,11 @@ struct AppCommands: Commands {
             Button("Экспорт…") { export?() }
                 .keyboardShortcut("e")
                 .disabled(export == nil)
-            Divider()
+        }
+        // В меню приложения, сразу после «Настройки…».
+        CommandGroup(after: .appSettings) {
             Button("Заблокировать") { lock.lock() }
-                .keyboardShortcut("l", modifiers: [.command, .control])
+                .keyboardShortcut("l")
                 .disabled(!lock.isEnabled || lock.isLocked)
         }
         // На месте стандартного подменю «Найти» в меню «Правка».
