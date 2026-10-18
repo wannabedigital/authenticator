@@ -3,47 +3,59 @@ import SwiftUI
 struct AccountGrid: View {
     @Environment(VaultStore.self) private var store
     @Environment(AppLock.self) private var lock
-    let profile: Profile
+    /// Профили, чьи аккаунты показывает сетка.
+    let profiles: [Profile]
     let searchText: String
+    /// Аккаунты идут группами под названиями профилей — когда видно сразу несколько профилей.
+    var groupsByProfile = false
 
     @State private var copiedID: OTPAccount.ID?
     @State private var copyCount = 0
-    @State private var accountToEdit: OTPAccount?
-    @State private var accountToDelete: OTPAccount?
+    @State private var accountToEdit: ProfileAccount?
+    @State private var accountToDelete: ProfileAccount?
     @State private var accountForQRCode: OTPAccount?
     @State private var isWindowVisible = true
 
-    private var accounts: [OTPAccount] {
+    /// Профили с подходящими под запрос аккаунтами; профили без них пропускаем.
+    private var sections: [Profile] {
         let query = searchText.trimmed
-        guard !query.isEmpty else { return profile.accounts }
-        return profile.accounts.filter {
-            $0.issuer.localizedStandardContains(query) || $0.name.localizedStandardContains(query)
+        return profiles.compactMap { profile in
+            var profile = profile
+            if !query.isEmpty {
+                profile.accounts = profile.accounts.filter {
+                    $0.issuer.localizedStandardContains(query) || $0.name.localizedStandardContains(query)
+                }
+            }
+            return profile.accounts.isEmpty ? nil : profile
         }
     }
 
     var body: some View {
+        let sections = sections
         Group {
-            if profile.accounts.isEmpty {
+            if profiles.allSatisfy(\.accounts.isEmpty) {
                 ContentUnavailableView {
                     Label("Нет аккаунтов", systemImage: "key.horizontal")
                 } description: {
                     Text("Нажмите «+» в панели инструментов, чтобы добавить первый код.")
                 }
-            } else if accounts.isEmpty {
+            } else if sections.isEmpty {
                 ContentUnavailableView.search(text: searchText)
             } else {
                 ScrollView {
                     TimelineView(EverySecond(isPaused: !isWindowVisible)) { context in
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: WindowLayout.cardMinWidth), spacing: WindowLayout.cardSpacing)], spacing: WindowLayout.cardSpacing) {
-                            ForEach(accounts) { account in
-                                AccountCard(
-                                    account: account,
-                                    date: context.date,
-                                    isCopied: copiedID == account.id,
-                                    onCopy: { copy(account) },
-                                    onAdvanceCounter: { store.incrementCounter(of: account.id, in: profile.id) }
-                                )
-                                .contextMenu { menu(for: account) }
+                            ForEach(sections) { profile in
+                                if groupsByProfile {
+                                    Section {
+                                        cards(of: profile, at: context.date)
+                                    } header: {
+                                        ProfileHeader(profile: profile)
+                                            .padding(.top, profile.id == sections.first?.id ? 0 : 8)
+                                    }
+                                } else {
+                                    cards(of: profile, at: context.date)
+                                }
                             }
                         }
                         .padding(WindowLayout.gridPadding)
@@ -52,7 +64,6 @@ struct AccountGrid: View {
                 .background(WindowVisibilityReader(isVisible: $isWindowVisible))
             }
         }
-        .navigationTitle(profile.name)
         .onChange(of: lock.isClosingSheets) { _, closing in
             guard closing else { return }
             accountToEdit = nil
@@ -75,36 +86,50 @@ struct AccountGrid: View {
         .sheet(item: $accountForQRCode) { account in
             AccountQRView(account: account)
         }
-        .sheet(item: $accountToEdit) { account in
-            EditAccountView(account: account, profileID: profile.id)
+        .sheet(item: $accountToEdit) { item in
+            EditAccountView(account: item.account, profileID: item.profileID)
         }
         .confirmationDialog(
-            "Удалить «\(accountToDelete?.title ?? "")»?",
+            "Удалить «\(accountToDelete?.account.title ?? "")»?",
             isPresented: Binding(get: { accountToDelete != nil }, set: { if !$0 { accountToDelete = nil } }),
             titleVisibility: .visible,
             presenting: accountToDelete
-        ) { account in
-            Button("Удалить", role: .destructive) { store.deleteAccount(account.id, from: profile.id) }
+        ) { item in
+            Button("Удалить", role: .destructive) { store.deleteAccount(item.account.id, from: item.profileID) }
         } message: { _ in
             Text("Если на сервисе включена двухфакторная защита, без этого кода войти не получится. Убедитесь, что у вас есть резервные коды.")
         }
     }
 
+    private func cards(of profile: Profile, at date: Date) -> some View {
+        ForEach(profile.accounts) { account in
+            AccountCard(
+                account: account,
+                date: date,
+                isCopied: copiedID == account.id,
+                onCopy: { copy(account) },
+                onAdvanceCounter: { store.incrementCounter(of: account.id, in: profile.id) }
+            )
+            .contextMenu { menu(for: account, in: profile.id) }
+        }
+    }
+
     @ViewBuilder
-    private func menu(for account: OTPAccount) -> some View {
+    private func menu(for account: OTPAccount, in profileID: Profile.ID) -> some View {
+        let item = ProfileAccount(account: account, profileID: profileID)
         Button("Скопировать код", systemImage: "doc.on.doc") { copy(account) }
-        Button("Изменить…", systemImage: "pencil") { accountToEdit = account }
+        Button("Изменить…", systemImage: "pencil") { accountToEdit = item }
         Button("Показать QR-код…", systemImage: "qrcode") { showQRCode(for: account) }
-        let otherProfiles = store.profiles.filter { $0.id != profile.id }
+        let otherProfiles = store.profiles.filter { $0.id != profileID }
         if !otherProfiles.isEmpty {
             Menu("Переместить в профиль", systemImage: "arrow.right.circle") {
                 ForEach(otherProfiles) { other in
-                    Button(other.name) { store.moveAccount(account.id, from: profile.id, to: other.id) }
+                    Button(other.name) { store.moveAccount(account.id, from: profileID, to: other.id) }
                 }
             }
         }
         Divider()
-        Button("Удалить…", systemImage: "trash", role: .destructive) { accountToDelete = account }
+        Button("Удалить…", systemImage: "trash", role: .destructive) { accountToDelete = item }
     }
 
     private func showQRCode(for account: OTPAccount) {
@@ -118,6 +143,30 @@ struct AccountGrid: View {
         Clipboard.copySecret(account.code(at: .now))
         copiedID = account.id
         copyCount += 1
+    }
+}
+
+/// Аккаунт вместе с профилем, в котором он лежит.
+private struct ProfileAccount: Identifiable {
+    let account: OTPAccount
+    let profileID: Profile.ID
+
+    var id: OTPAccount.ID { account.id }
+}
+
+/// Заголовок группы карточек в поиске по всем профилям.
+private struct ProfileHeader: View {
+    let profile: Profile
+
+    var body: some View {
+        Label {
+            Text(profile.name)
+        } icon: {
+            ProfileIcon(profile: profile, size: 20)
+        }
+        .font(.headline)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityAddTraits(.isHeader)
     }
 }
 

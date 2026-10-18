@@ -17,6 +17,11 @@ extension FocusedValues {
         set { self[FindAccountActionKey.self] = newValue }
     }
 
+    var findInAllProfilesAction: (() -> Void)? {
+        get { self[FindInAllProfilesActionKey.self] }
+        set { self[FindInAllProfilesActionKey.self] = newValue }
+    }
+
     var findProfileAction: (() -> Void)? {
         get { self[FindProfileActionKey.self] }
         set { self[FindProfileActionKey.self] = newValue }
@@ -45,6 +50,10 @@ private struct FindAccountActionKey: FocusedValueKey {
     typealias Value = () -> Void
 }
 
+private struct FindInAllProfilesActionKey: FocusedValueKey {
+    typealias Value = () -> Void
+}
+
 private struct FindProfileActionKey: FocusedValueKey {
     typealias Value = () -> Void
 }
@@ -63,6 +72,7 @@ struct AppCommands: Commands {
     @FocusedValue(\.addAccountAction) private var addAccount
     @FocusedValue(\.newProfileAction) private var newProfile
     @FocusedValue(\.findAccountAction) private var findAccount
+    @FocusedValue(\.findInAllProfilesAction) private var findInAllProfiles
     @FocusedValue(\.findProfileAction) private var findProfile
     @FocusedValue(\.exportAction) private var export
     @FocusedValue(\.openBackupAction) private var openBackup
@@ -97,6 +107,9 @@ struct AppCommands: Commands {
                 Button("Найти код…") { findAccount?() }
                     .keyboardShortcut("f")
                     .disabled(findAccount == nil)
+                Button("Найти во всех профилях…") { findInAllProfiles?() }
+                    .keyboardShortcut("f", modifiers: [.command, .option])
+                    .disabled(findInAllProfiles == nil)
                 Button("Найти профиль…") { findProfile?() }
                     .keyboardShortcut("f", modifiers: [.command, .shift])
                     .disabled(findProfile == nil)
