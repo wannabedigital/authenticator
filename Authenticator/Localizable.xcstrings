@@ -2700,6 +2700,22 @@
         }
       }
     },
+    "Этот профиль": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This Profile"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Этот профиль"
+          }
+        }
+      }
+    },
     "неизвестная ошибка": {
       "localizations": {
         "en": {

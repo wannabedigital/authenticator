@@ -101,11 +101,7 @@ struct ContentView: View {
         // с разделителями над полем и под ним, а так поле лежит прямо на фоне окна.
         VStack(spacing: 0) {
             if accountSearch.isPresented {
-                AccountSearchBar(
-                    search: $accountSearch,
-                    selectedProfile: selectedProfile,
-                    showsScope: store.profiles.count > 1
-                )
+                AccountSearchBar(search: $accountSearch, showsScope: selection != nil && store.profiles.count > 1)
                 .padding(.horizontal, WindowLayout.gridPadding)
                 .padding(.vertical, 8)
                 .transition(.opacity)
@@ -154,7 +150,6 @@ struct ContentView: View {
 /// Поле поиска кодов и под ним — где искать: в выбранном профиле или во всех.
 private struct AccountSearchBar: View {
     @Binding var search: SearchState
-    let selectedProfile: Profile?
     let showsScope: Bool
 
     var body: some View {
@@ -166,16 +161,24 @@ private struct AccountSearchBar: View {
             ) {
                 withAnimation(SearchState.animation) { search.dismiss() }
             }
-            if let selectedProfile, showsScope {
-                Picker("Искать в", selection: $search.scope) {
-                    Text("Все профили").tag(SearchState.Scope.allProfiles)
-                    Text(selectedProfile.name).tag(SearchState.Scope.selectedProfile)
+            if showsScope {
+                // Кнопки области поиска, как в Finder: без подложки, фон появляется при наведении и у выбранной.
+                HStack(spacing: 3) {
+                    scopeButton("Все профили", scope: .allProfiles)
+                    scopeButton("Этот профиль", scope: .selectedProfile)
                 }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-                .fixedSize()
+                .buttonStyle(.accessoryBar)
+                .controlSize(.small)
+                .fontWeight(.semibold)
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("Искать в")
             }
         }
+    }
+
+    private func scopeButton(_ title: LocalizedStringKey, scope: SearchState.Scope) -> some View {
+        Toggle(title, isOn: Binding(get: { search.scope == scope }, set: { if $0 { search.scope = scope } }))
+            .toggleStyle(.button)
     }
 }
 
