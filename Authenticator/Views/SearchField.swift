@@ -62,6 +62,7 @@ struct SearchField: NSViewRepresentable {
     }
 
     func updateNSView(_ field: FocusableSearchField, context: Context) {
+        let closedWhenEmpty = context.coordinator.parent.closesWhenEmpty
         context.coordinator.parent = self
         if field.stringValue != text {
             field.stringValue = text
@@ -69,6 +70,10 @@ struct SearchField: NSViewRepresentable {
         if context.coordinator.lastFocusRequest != focusRequest {
             context.coordinator.lastFocusRequest = focusRequest
             field.focus()
+        } else if closesWhenEmpty, !closedWhenEmpty, text.isEmpty, field.currentEditor() == nil {
+            // Пустое поле без фокуса, которое раньше оставалось открытым, закрываем, как только это разрешили.
+            // Откладываем: состояние нельзя менять посреди обновления SwiftUI.
+            Task { onDismiss() }
         }
     }
 

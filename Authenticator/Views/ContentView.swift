@@ -133,8 +133,8 @@ struct ContentView: View {
             withAnimation(SearchState.animation) { accountSearch.present(scope: .allProfiles) }
         })
         .onChange(of: selection) {
-            // Профиль, выбранный в боковой панели, становится областью поиска: так из общих результатов
-            // можно перейти в профиль, где лежит код.
+            // Выбранный в боковой панели профиль становится областью поиска. Пустой поиск при этом
+            // закрывается, как и обычный, а с запросом остаётся — и показывает, что нашлось в профиле.
             if accountSearch.isGlobal { accountSearch.scope = .selectedProfile }
         }
     }
