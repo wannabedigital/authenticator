@@ -40,7 +40,8 @@ struct ContentView: View {
                     }
                     Group {
                         if let selection, let profile = store.profile(withID: selection) {
-                            AccountGrid(profile: profile, searchText: accountSearch.query)
+                            AccountGrid(profiles: [profile], searchText: accountSearch.query)
+                                .navigationTitle(profile.name)
                         } else {
                             ContentUnavailableView("Выберите профиль", systemImage: "person.crop.circle")
                         }
