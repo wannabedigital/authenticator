@@ -6,7 +6,14 @@ struct AuthenticatorApp: App {
     @State private var lock: AppLock
 
     init() {
+        #if BENCHMARK
+        // Сборка замеров: `-benchmark-cards N` — N выдуманных аккаунтов вместо настоящего хранилища.
+        // Блокировку на время замера выключает аргумент `-lock.enabled '<false/>'`.
+        let count = UserDefaults.standard.integer(forKey: "benchmark-cards")
+        let store = count > 0 ? VaultStore(benchmarkVault: .benchmark(accounts: count)) : VaultStore()
+        #else
         let store = VaultStore()
+        #endif
         _store = State(initialValue: store)
         _lock = State(initialValue: AppLock(store: store))
     }

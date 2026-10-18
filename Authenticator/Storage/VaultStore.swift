@@ -22,6 +22,19 @@ final class VaultStore {
         self.storage = storage
     }
 
+    #if BENCHMARK
+    /// Только для сборки замеров: выдуманные аккаунты в памяти. Настоящее хранилище и связка ключей
+    /// не читаются, а сохранять здесь нечего — замер ничего не меняет.
+    init(benchmarkVault vault: Vault) {
+        storage = VaultStorage(
+            fileURL: URL.temporaryDirectory.appending(path: "authenticator-benchmark.sealed"),
+            keyStore: KeychainKeyStore(service: "authenticator-benchmark")
+        )
+        self.vault = vault
+        isLoaded = true
+    }
+    #endif
+
     func load() {
         guard !isLoaded else { return }
         do {
