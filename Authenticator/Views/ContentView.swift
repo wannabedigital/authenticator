@@ -27,30 +27,7 @@ struct ContentView: View {
             NavigationSplitView(columnVisibility: $columnVisibility) {
                 ProfileSidebar(selection: $selection, search: $profileSearch)
             } detail: {
-                // Обычная колонка, а не safeAreaBar: на macOS панель получает жёсткий край
-                // с разделителями над полем и под ним, а так поле лежит прямо на фоне окна.
-                VStack(spacing: 0) {
-                    if accountSearch.isPresented {
-                        SearchField(text: $accountSearch.query, prompt: String(localized: "Поиск кодов"), focusRequest: accountSearch.focusRequest) {
-                            withAnimation(SearchState.animation) { accountSearch.dismiss() }
-                        }
-                        .padding(.horizontal, WindowLayout.gridPadding)
-                        .padding(.vertical, 8)
-                        .transition(.opacity)
-                    }
-                    Group {
-                        if let selection, let profile = store.profile(withID: selection) {
-                            AccountGrid(profiles: [profile], searchText: accountSearch.query)
-                                .navigationTitle(profile.name)
-                        } else {
-                            ContentUnavailableView("Выберите профиль", systemImage: "person.crop.circle")
-                        }
-                    }
-                    // Пустое состояние занимает ровно свой размер, и без растягивания
-                    // колонка центрирует его вместе с полем — поле уезжает в середину окна.
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-                .navigationSplitViewColumnWidth(min: WindowLayout.detailMinWidth, ideal: 660)
+                detail
             }
             .frame(minWidth: WindowLayout.minWidth, minHeight: WindowLayout.minHeight)
             .toolbar {
@@ -60,9 +37,6 @@ struct ContentView: View {
                 }
             }
             .focusedSceneValue(\.addAccountAction, selection == nil ? nil : { isAddingAccount = true })
-            .focusedSceneValue(\.findAccountAction, selection == nil ? nil : {
-                withAnimation(SearchState.animation) { accountSearch.present() }
-            })
             .focusedSceneValue(\.findProfileAction) {
                 // Поле поиска живёт в боковой панели — если она скрыта, сначала показываем её.
                 withAnimation(SearchState.animation) {
@@ -122,11 +96,86 @@ struct ContentView: View {
         }
     }
 
+    private var detail: some View {
+        // Обычная колонка, а не safeAreaBar: на macOS панель получает жёсткий край
+        // с разделителями над полем и под ним, а так поле лежит прямо на фоне окна.
+        VStack(spacing: 0) {
+            if accountSearch.isPresented {
+                AccountSearchBar(
+                    search: $accountSearch,
+                    selectedProfile: selectedProfile,
+                    showsScope: store.profiles.count > 1
+                )
+                .padding(.horizontal, WindowLayout.gridPadding)
+                .padding(.vertical, 8)
+                .transition(.opacity)
+            }
+            Group {
+                if accountSearch.isGlobal {
+                    AccountGrid(profiles: store.profiles, searchText: accountSearch.query, groupsByProfile: true)
+                        .navigationTitle("Все профили")
+                } else if let selectedProfile {
+                    AccountGrid(profiles: [selectedProfile], searchText: accountSearch.query)
+                        .navigationTitle(selectedProfile.name)
+                } else {
+                    ContentUnavailableView("Выберите профиль", systemImage: "person.crop.circle")
+                }
+            }
+            // Пустое состояние занимает ровно свой размер, и без растягивания
+            // колонка центрирует его вместе с полем — поле уезжает в середину окна.
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .navigationSplitViewColumnWidth(min: WindowLayout.detailMinWidth, ideal: 660)
+        .focusedSceneValue(\.findAccountAction, selection == nil ? nil : {
+            withAnimation(SearchState.animation) { accountSearch.present() }
+        })
+        .focusedSceneValue(\.findInAllProfilesAction, store.profiles.isEmpty ? nil : {
+            withAnimation(SearchState.animation) { accountSearch.present(scope: .allProfiles) }
+        })
+        .onChange(of: selection) {
+            // Профиль, выбранный в боковой панели, становится областью поиска: так из общих результатов
+            // можно перейти в профиль, где лежит код.
+            if accountSearch.isGlobal { accountSearch.scope = .selectedProfile }
+        }
+    }
+
+    private var selectedProfile: Profile? {
+        selection.flatMap(store.profile(withID:))
+    }
+
     private var saveErrorPresented: Binding<Bool> {
         Binding(
             get: { store.saveError != nil },
             set: { if !$0 { store.saveError = nil } }
         )
+    }
+}
+
+/// Поле поиска кодов и под ним — где искать: в выбранном профиле или во всех.
+private struct AccountSearchBar: View {
+    @Binding var search: SearchState
+    let selectedProfile: Profile?
+    let showsScope: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // Во всех профилях пустой запрос показывает все коды — поиск остаётся открытым.
+            SearchField(
+                text: $search.query, prompt: String(localized: "Поиск кодов"),
+                focusRequest: search.focusRequest, closesWhenEmpty: !search.isGlobal
+            ) {
+                withAnimation(SearchState.animation) { search.dismiss() }
+            }
+            if let selectedProfile, showsScope {
+                Picker("Искать в", selection: $search.scope) {
+                    Text("Все профили").tag(SearchState.Scope.allProfiles)
+                    Text(selectedProfile.name).tag(SearchState.Scope.selectedProfile)
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .fixedSize()
+            }
+        }
     }
 }
 

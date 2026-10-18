@@ -380,6 +380,22 @@
         }
       }
     },
+    "Все профили": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All Profiles"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Все профили"
+          }
+        }
+      }
+    },
     "Вставьте ссылку otpauth:// — поля ниже заполнятся сами.": {
       "localizations": {
         "en": {
@@ -748,6 +764,22 @@
         }
       }
     },
+    "Искать в": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search In"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Искать в"
+          }
+        }
+      }
+    },
     "Ключ должен состоять из латинских букв A–Z и цифр 2–7.": {
       "localizations": {
         "en": {
@@ -1032,6 +1064,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Найти"
+          }
+        }
+      }
+    },
+    "Найти во всех профилях…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Find in All Profiles…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Найти во всех профилях…"
           }
         }
       }

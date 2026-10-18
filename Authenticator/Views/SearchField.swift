@@ -6,13 +6,26 @@ struct SearchState {
     /// Строка поиска проявляется и растворяется, а содержимое под ней плавно сдвигается.
     static let animation = Animation.smooth(duration: 0.25)
 
+    /// Где искать коды: в выбранном профиле или во всех сразу.
+    enum Scope: Hashable {
+        case selectedProfile
+        case allProfiles
+    }
+
     private(set) var isPresented = false
     var query = ""
+    var scope = Scope.selectedProfile
     /// Каждое увеличение переводит фокус в поле — в том числе если оно уже открыто.
     private(set) var focusRequest = 0
 
-    mutating func present() {
+    /// Поиск идёт по всем профилям.
+    var isGlobal: Bool {
+        isPresented && scope == .allProfiles
+    }
+
+    mutating func present(scope: Scope = .selectedProfile) {
         isPresented = true
+        self.scope = scope
         focusRequest += 1
     }
 
@@ -23,11 +36,12 @@ struct SearchState {
 }
 
 /// Системное поле поиска (NSSearchField): родной вид и кнопка очистки.
-/// Esc закрывает поиск; если поле теряет фокус с пустым запросом — тоже.
+/// Esc закрывает поиск; если поле теряет фокус с пустым запросом — тоже, когда `closesWhenEmpty`.
 struct SearchField: NSViewRepresentable {
     @Binding var text: String
     let prompt: String
     let focusRequest: Int
+    var closesWhenEmpty = true
     let onDismiss: () -> Void
 
     func makeCoordinator() -> Coordinator {
@@ -86,7 +100,7 @@ struct SearchField: NSViewRepresentable {
         }
 
         func controlTextDidEndEditing(_ notification: Notification) {
-            guard let field = notification.object as? NSSearchField, field.stringValue.isEmpty else { return }
+            guard parent.closesWhenEmpty, let field = notification.object as? NSSearchField, field.stringValue.isEmpty else { return }
             // Откладываем: редактирование заканчивается и тогда, когда SwiftUI убирает поле с экрана.
             Task { [weak self] in
                 self?.parent.onDismiss()
