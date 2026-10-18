@@ -11,6 +11,7 @@ struct AccountGrid: View {
     @State private var accountToEdit: OTPAccount?
     @State private var accountToDelete: OTPAccount?
     @State private var accountForQRCode: OTPAccount?
+    @State private var isWindowVisible = true
 
     private var accounts: [OTPAccount] {
         let query = searchText.trimmed
@@ -32,8 +33,7 @@ struct AccountGrid: View {
                 ContentUnavailableView.search(text: searchText)
             } else {
                 ScrollView {
-                    // Тикаем ровно на границе секунды, чтобы коды менялись без задержки.
-                    TimelineView(.periodic(from: Date(timeIntervalSince1970: Date.now.timeIntervalSince1970.rounded(.down)), by: 1)) { context in
+                    TimelineView(EverySecond(isPaused: !isWindowVisible)) { context in
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: WindowLayout.cardMinWidth), spacing: WindowLayout.cardSpacing)], spacing: WindowLayout.cardSpacing) {
                             ForEach(accounts) { account in
                                 AccountCard(
@@ -49,6 +49,7 @@ struct AccountGrid: View {
                         .padding(WindowLayout.gridPadding)
                     }
                 }
+                .background(WindowVisibilityReader(isVisible: $isWindowVisible))
             }
         }
         .navigationTitle(profile.name)
@@ -117,6 +118,23 @@ struct AccountGrid: View {
         Clipboard.copySecret(account.code(at: .now))
         copiedID = account.id
         copyCount += 1
+    }
+}
+
+/// Тикает ровно на границе каждой секунды, чтобы коды менялись без задержки.
+/// Пока окна не видно, расписание стоит: в фоне сетка не тратит процессорное время.
+private struct EverySecond: TimelineSchedule {
+    let isPaused: Bool
+
+    func entries(from startDate: Date, mode: TimelineScheduleMode) -> AnyIterator<Date> {
+        var date = Date(timeIntervalSince1970: startDate.timeIntervalSince1970.rounded(.down))
+        var isFirst = true
+        return AnyIterator {
+            guard isFirst || !isPaused else { return nil }
+            isFirst = false
+            defer { date += 1 }
+            return date
+        }
     }
 }
 
