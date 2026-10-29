@@ -100,7 +100,8 @@ struct AccountGrid: View {
     }
 
     private func cards(of profile: Profile) -> some View {
-        ForEach(profile.accounts) { account in
+        ForEach(profile.accounts.map { ProfileAccount(account: $0, profileID: profile.id) }) { item in
+            let account = item.account
             // Таймер у каждой карточки свой, а контекстное меню — снаружи него: под общим таймером сетки
             // меню пересобиралось каждую секунду, и открытое подменю «Переместить в профиль» мигало.
             // Расписание у всех карточек одно, так что коды по-прежнему меняются разом.
@@ -154,7 +155,10 @@ private struct ProfileAccount: Identifiable {
     let account: OTPAccount
     let profileID: Profile.ID
 
-    var id: OTPAccount.ID { account.id }
+    /// Профиль входит в идентичность: перенесённый в другой профиль аккаунт сетка показывает новой карточкой.
+    /// Ленивая сетка различает карточки только по этому id, и по одному id аккаунта она подставляла
+    /// после переноса закешированную карточку из старого профиля — та больше не получала обновлений сетки.
+    var id: [UUID] { [profileID, account.id] }
 }
 
 /// Заголовок группы карточек в поиске по всем профилям.
