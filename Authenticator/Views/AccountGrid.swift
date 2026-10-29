@@ -43,23 +43,21 @@ struct AccountGrid: View {
                 ContentUnavailableView.search(text: searchText)
             } else {
                 ScrollView {
-                    TimelineView(EverySecond(isPaused: !isWindowVisible)) { context in
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: WindowLayout.cardMinWidth), spacing: WindowLayout.cardSpacing)], spacing: WindowLayout.cardSpacing) {
-                            ForEach(sections) { profile in
-                                if groupsByProfile {
-                                    Section {
-                                        cards(of: profile, at: context.date)
-                                    } header: {
-                                        ProfileHeader(profile: profile)
-                                            .padding(.top, profile.id == sections.first?.id ? 0 : 8)
-                                    }
-                                } else {
-                                    cards(of: profile, at: context.date)
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: WindowLayout.cardMinWidth), spacing: WindowLayout.cardSpacing)], spacing: WindowLayout.cardSpacing) {
+                        ForEach(sections) { profile in
+                            if groupsByProfile {
+                                Section {
+                                    cards(of: profile)
+                                } header: {
+                                    ProfileHeader(profile: profile)
+                                        .padding(.top, profile.id == sections.first?.id ? 0 : 8)
                                 }
+                            } else {
+                                cards(of: profile)
                             }
                         }
-                        .padding(WindowLayout.gridPadding)
                     }
+                    .padding(WindowLayout.gridPadding)
                 }
                 .background(WindowVisibilityReader(isVisible: $isWindowVisible))
             }
@@ -101,15 +99,20 @@ struct AccountGrid: View {
         }
     }
 
-    private func cards(of profile: Profile, at date: Date) -> some View {
+    private func cards(of profile: Profile) -> some View {
         ForEach(profile.accounts) { account in
-            AccountCard(
-                account: account,
-                date: date,
-                isCopied: copiedID == account.id,
-                onCopy: { copy(account) },
-                onAdvanceCounter: { store.incrementCounter(of: account.id, in: profile.id) }
-            )
+            // Таймер у каждой карточки свой, а контекстное меню — снаружи него: под общим таймером сетки
+            // меню пересобиралось каждую секунду, и открытое подменю «Переместить в профиль» мигало.
+            // Расписание у всех карточек одно, так что коды по-прежнему меняются разом.
+            TimelineView(EverySecond(isPaused: !isWindowVisible)) { context in
+                AccountCard(
+                    account: account,
+                    date: context.date,
+                    isCopied: copiedID == account.id,
+                    onCopy: { copy(account) },
+                    onAdvanceCounter: { store.incrementCounter(of: account.id, in: profile.id) }
+                )
+            }
             .contextMenu { menu(for: account, in: profile.id) }
         }
     }
@@ -171,7 +174,7 @@ private struct ProfileHeader: View {
 }
 
 /// Тикает ровно на границе каждой секунды, чтобы коды менялись без задержки.
-/// Пока окна не видно, расписание стоит: в фоне сетка не тратит процессорное время.
+/// Пока окна не видно, расписание стоит: в фоне карточки не тратят процессорное время.
 private struct EverySecond: TimelineSchedule {
     let isPaused: Bool
 
